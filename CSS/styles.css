@@ -1,0 +1,50 @@
+:root {
+    --primary-blue: #1a73e8;
+    --border-color: #dadce0;
+    --text-primary: #3c4043;
+    --text-secondary: #5f6368;
+    --background-hover: #f1f3f4;
+    --sidebar-width: 256px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+    color: var(--text-primary);
+    overflow: hidden;
+}
+
+.calendar-wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Navigation */
+.top-nav {
+    height: 64px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-branding {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    padding: 0 8px;
+}
