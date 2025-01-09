@@ -122,3 +122,65 @@
             </main>
         </div>
     </div>
+    <!-- Event Creation Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Neuer Termin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control event-title-input" placeholder="Titel hinzufügen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Start</label>
+                        <input type="datetime-local" class="form-control" id="eventStart" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ende</label>
+                        <input type="datetime-local" class="form-control" id="eventEnd" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Priorität</label>
+                        <select name="priority" class="form-control">
+                            <option value="high">Wichtig</option>
+                            <option value="medium" selected>Standard</option>
+                            <option value="low">Optional</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary save-event">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neue Kategorie Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Neue Kategorie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Farbe</label>
+                        <input type="color" class="form-control form-control-color" id="categoryColor" value="#3788d8">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
