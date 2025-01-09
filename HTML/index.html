@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="calendar-wrapper">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-left">
+                <div class="calendar-branding">
+                    <i class="bi bi-calendar-check-fill"></i>
+                    <span>Termin Assistent</span>
+                </div>
+            </div>
+            <div class="nav-center">
+                <button class="today-btn">Heute</button>
+                <div class="nav-arrows">
+                    <button><i class="bi bi-chevron-left"></i></button>
+                    <button><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <h2 class="current-date">Dezember 2024</h2>
+            </div>
+            <div class="nav-right">
+                <select class="view-selector">
+                    <option>Woche</option>
+                    <option>Monat</option>
+                    <option>Tag</option>
+                </select>
+            </div>
+        </nav>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="create-btn-wrapper">
+                    <button class="create-event-btn">
+                        <i class="bi bi-plus-lg"></i>
+                        <span>Neuer Termin</span>
+                    </button>
+                </div>
+                <!-- Neue Statistik-Sektion -->
+                <div class="stats-section">
+                    <h3>Übersicht</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="todayEvents">0</span>
+                            <span class="stat-label">Heute</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="weekEvents">0</span>
+                            <span class="stat-label">Diese Woche</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalEvents">0</span>
+                            <span class="stat-label">Gesamt</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- To-Do Liste -->
+                <div class="todo-section">
+                    <h3>To-Do Liste</h3>
+                    <div class="todo-input-group">
+                        <input type="text" id="todoInput" class="form-control" placeholder="Neue Aufgabe">
+                        <button id="addTodo" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                    <div class="todo-list" id="todoList">
+                        <!-- Wird durch JS gefüllt -->
+                    </div>
+                </div>
+                <!-- Termin-Kategorien -->
+                <div class="calendars-list">
+                    <h3>Kategorien</h3>
+                    <div class="category-add">
+                        <button class="btn btn-sm btn-outline-primary" id="addCategoryBtn">
+                            <i class="bi bi-plus"></i> Neue Kategorie
+                        </button>
+                    </div>
+                    <ul id="categoriesList">
+                        <li>
+                            <label>
+                                <input type="checkbox" checked data-priority="high">
+                                <span class="color-dot priority-high"></span>
+                                <span>Wichtig</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" checked data-priority="medium">
+                                <span class="color-dot priority-medium"></span>
+                                <span>Standard</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" checked data-priority="low">
+                                <span class="color-dot priority-low"></span>
+                                <span>Optional</span>
+                            </label>
+                        </li>
+                        <!-- Benutzerdefinierte Kategorien werden hier eingefügt -->
+                    </ul>
+                </div>
+            </aside>
+            <!-- Calendar Grid -->
+            <main class="calendar-grid">
+                <!-- Time Column -->
+                <div class="time-column">
+                    <!-- Will be filled by JS -->
+                </div>
+                <!-- Days Columns -->
+                <div class="days-grid">
+                    <!-- Will be filled by JS -->
+                </div>
+            </main>
+        </div>
+    </div>
