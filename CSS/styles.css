@@ -124,3 +124,75 @@ body {
     flex: 1;
     overflow: hidden;
 }
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    padding: 12px;
+    border-right: 1px solid var(--border-color);
+    height: calc(100vh - 64px); /* Höhe des Viewports minus Header */
+    overflow-y: auto; /* Aktiviert Scrolling */
+    scrollbar-width: thin; /* Für Firefox */
+    scrollbar-color: var(--border-color) transparent; /* Für Firefox */
+}
+
+/* Styling für Webkit Browser (Chrome, Safari, Edge) */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+
+.create-event-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.create-event-btn:hover {
+    box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3);
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+}
+
+.time-column {
+    width: 60px;
+    border-right: 1px solid var(--border-color);
+    background: white;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+}
+
+.days-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-left: 1px solid var(--border-color);
+    background: white;
+}
+
+.day-column {
+    min-height: 1440px; /* 24 Stunden * 60px */
+    border-right: 1px solid var(--border-color);
+    position: relative;
+    background: white;
+}
