@@ -48,3 +48,79 @@ body {
     font-size: 22px;
     padding: 0 8px;
 }
+/* Top Navigation */
+.top-nav {
+    height: 64px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-branding {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    padding: 0 8px;
+}
+
+/* Button Styles */
+.menu-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.menu-btn:hover {
+    background-color: var(--background-hover);
+}
+
+.today-btn {
+    padding: 0 24px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-arrows button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.current-date {
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0 12px;
+}
+
+.view-selector {
+    padding: 0 12px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: white;
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
