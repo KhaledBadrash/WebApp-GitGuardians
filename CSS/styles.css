@@ -196,3 +196,272 @@ body {
     position: relative;
     background: white;
 }
+/* Zeitlinien für jede Stunde */
+.day-column::after {
+    content: '';
+    position: absolute;
+    top: 50px; /* Nach dem Header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--border-color) 0,
+        var(--border-color) 1px,
+        transparent 1px,
+        transparent 60px
+    );
+    pointer-events: none;
+}
+
+.time-slot {
+    height: 60px;
+    padding: 0 8px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.day-header {
+    height: 50px;
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Heute-Markierung */
+.day-header.today {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.time-column {
+    width: 60px;
+    border-right: 1px solid var(--border-color);
+    background: white;
+}
+
+.time-slot {
+    height: 60px;
+    padding: 5px 8px;
+    text-align: right;
+    color: var(--text-secondary);
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.time-slot::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+/* Modal Styles */
+.event-title-input {
+    width: 100%;
+    border: none;
+    font-size: 22px;
+    padding: 8px;
+}
+
+.event-title-input:focus {
+    outline: none;
+}
+
+.event-time-section,
+.event-calendar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .nav-center {
+        flex: 1;
+    }
+    
+    .current-date {
+        font-size: 18px;
+    }
+} 
+
+/* Neue Styles für die Features */
+.stats-section {
+    margin: 24px 0;
+    padding: 16px;
+    background: var(--background-hover);
+    border-radius: 8px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Prioritäts-Farben */
+.color-dot.priority-high { 
+    background-color: #dc3545; 
+}
+.color-dot.priority-medium { 
+    background-color: #ffc107; 
+}
+.color-dot.priority-low { 
+    background-color: #28a745; 
+}
+
+.event-item {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: white;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;  /* Safari */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* IE/Edge */
+    user-select: none;
+    z-index: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.event-time {
+    font-size: 11px;
+    opacity: 0.8;
+}
+.event-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Prioritätsfarben */
+.event-item.priority-high {
+    background: linear-gradient(45deg, #dc3545, #ff6b6b);
+    color: white;
+}
+
+.event-item.priority-medium {
+    background: linear-gradient(45deg, #ffc107, #ffdb4d);
+    color: #333;
+}
+
+.event-item.priority-low {
+    background: linear-gradient(45deg, #28a745, #5dd675);
+    color: white;
+}
+
+/* Resize Handles */
+.resize-handle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6px;
+    cursor: row-resize;
+}
+
+.resize-handle.top {
+    top: -3px;
+}
+
+.resize-handle.bottom {
+    bottom: -3px;
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+    background: rgba(0,0,0,0.1);
+}
+
+
+.event-item::before,
+.event-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    cursor: row-resize;
+}
+
+.event-item::before {
+    top: 0;
+}
+
+.event-item::after {
+    bottom: 0;
+}
+
+.event-item:hover::before,
+.event-item:hover::after {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.event-item.priority-high {
+    background: linear-gradient(45deg, #dc3545, #ff6b6b);
+}
+
+.event-item.priority-medium {
+    background: linear-gradient(45deg, #ffc107, #ffdb4d);
+    color: #333;
+}
+
+.event-item.priority-low {
+    background: linear-gradient(45deg, #28a745, #5dd675);
+}
+
+.event-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Verbesserte Zeitanzeige */
+.event-time {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.event-title {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
