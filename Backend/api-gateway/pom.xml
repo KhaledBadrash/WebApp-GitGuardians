@@ -28,7 +28,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-
+         
+        <!-- HATEOAS Dependency -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
+             
         <!-- DevTools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
