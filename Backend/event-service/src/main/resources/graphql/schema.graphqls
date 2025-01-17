@@ -1,7 +1,43 @@
-# Event Service Configuration
-server.port=8081
-spring.application.name=event-service
+type Event {
+    id: ID!
+    title: String!
+    start: DateTime!
+    end: DateTime!
+    userId: String!
+    priority: Priority!
+    categoryId: String
+}
 
-# GraphQL Configuration
-spring.graphql.graphiql.enabled=true
-spring.graphql.schema.printer.enabled=true
+enum Priority {
+    HIGH
+    MEDIUM
+    LOW
+}
+
+type Query {
+    event(id: ID!): Event
+    eventsByUser(userId: String!): [Event]!
+    eventsByDateRange(start: DateTime!, end: DateTime!): [Event]!
+}
+
+type Mutation {
+    createEvent(
+        title: String!
+        start: DateTime!
+        end: DateTime!
+        userId: String!
+        priority: Priority!
+    ): Event!
+
+    updateEvent(
+        id: ID!
+        title: String
+        start: DateTime
+        end: DateTime
+        priority: Priority
+    ): Event
+
+    deleteEvent(id: ID!): Boolean!
+}
+
+scalar DateTime
