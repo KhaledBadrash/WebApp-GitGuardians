@@ -1,3 +1,4 @@
+# Definition des Event-Typs
 type Event {
     id: ID!
     title: String!
@@ -8,19 +9,28 @@ type Event {
     categoryId: String
 }
 
+# Definition des Prioritäts-Enums
 enum Priority {
     HIGH
     MEDIUM
     LOW
 }
 
+# Definition von Queries (Abfragen)
 type Query {
+    # Ein Event basierend auf der ID abrufen
     event(id: ID!): Event
+    
+    # Alle Events eines Benutzers abrufen
     eventsByUser(userId: String!): [Event]!
+    
+    # Alle Events in einem bestimmten Zeitbereich abrufen
     eventsByDateRange(start: DateTime!, end: DateTime!): [Event]!
 }
 
+# Definition von Mutations (Veränderungen)
 type Mutation {
+    # Ein neues Event erstellen
     createEvent(
         title: String!
         start: DateTime!
@@ -29,6 +39,7 @@ type Mutation {
         priority: Priority!
     ): Event!
 
+    # Ein bestehendes Event aktualisieren
     updateEvent(
         id: ID!
         title: String
@@ -37,7 +48,9 @@ type Mutation {
         priority: Priority
     ): Event
 
+    # Ein Event basierend auf der ID löschen
     deleteEvent(id: ID!): Boolean!
 }
 
+# Definition des DateTime-Scalars
 scalar DateTime
