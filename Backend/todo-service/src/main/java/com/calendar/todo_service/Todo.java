@@ -1,4 +1,4 @@
-package main.java.com.calendar.todo_service;
+package com.calendar.todo_service;
 
 import lombok.Data;
 
