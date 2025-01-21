@@ -18,12 +18,12 @@ public class GatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-            // Route für den User-Service
+            .route("event-service", r -> r.path("/api/events/**")
+                .uri("http://localhost:8081"))
             .route("user-service", r -> r.path("/api/users/**")
-                .uri("http://localhost:8081")) // URL des User-Service anpassen
-            // Route für den Kalender-Service
-            .route("calendar-service", r -> r.path("/api/calendar/**")
-                .uri("http://localhost:8082")) // URL des Kalender-Service anpassen
+                .uri("http://localhost:8082"))
+            .route("todo-service", r -> r.path("/api/todos/**")
+                .uri("http://localhost:8083"))
             .build();
     }
 
