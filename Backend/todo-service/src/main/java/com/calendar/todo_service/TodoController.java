@@ -15,7 +15,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/todos")
-class TodoController {
+@CrossOrigin(origins = "*")
+public class TodoController {
     private final Map<String, Todo> todos = new ConcurrentHashMap<>();
 
     @GetMapping("/{id}")
@@ -49,6 +50,15 @@ class TodoController {
     public ResponseEntity<?> createTodo(@RequestBody Todo todo) {
         todo.setId(UUID.randomUUID().toString());
         todo.setCompleted(false);
+        
+        // Validierung
+        if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Title is required");
+        }
+        if (todo.getUserId() == null || todo.getUserId().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("UserId is required");
+        }
+
         todos.put(todo.getId(), todo);
 
         EntityModel<Todo> resource = EntityModel.of(todo,
@@ -74,7 +84,8 @@ class TodoController {
 
         return EntityModel.of(todo,
             linkTo(methodOn(TodoController.class).getTodo(id)).withSelfRel(),
-            linkTo(methodOn(TodoController.class).getAllTodos(todo.getUserId())).withRel("user-todos")
+            linkTo(methodOn(TodoController.class).getAllTodos(todo.getUserId())).withRel("user-todos"),
+            linkTo(methodOn(TodoController.class).toggleTodo(id)).withRel("toggle")
         );
     }
 
@@ -85,6 +96,12 @@ class TodoController {
         }
         todos.remove(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(TodoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleTodoNotFound(TodoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
 
