@@ -1,17 +1,22 @@
 package com.calendar.event_service;
 
+import graphql.scalars.ExtendedScalars;
 import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 @Configuration
 public class DateTimeScalarConfiguration {
+
     @Bean
     public GraphQLScalarType dateTimeScalar() {
-        return GraphQLScalarType.newScalar()
-                .name("DateTime")
-                .description("A custom scalar to handle DateTime")
-                .coercing(new DateTimeCoercing())
-                .build();
+        return ExtendedScalars.DateTime;
+    }
+
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
+        return wiringBuilder -> wiringBuilder
+                .scalar(ExtendedScalars.DateTime);
     }
 }
