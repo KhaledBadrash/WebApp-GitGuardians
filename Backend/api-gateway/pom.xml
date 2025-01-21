@@ -15,7 +15,7 @@
     <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api-gateway</name>
-    <description>API Gateway for Calendar Application</description>
+    <description>API Gateway für Kalender-Anwendung</description>
 
     <properties>
         <java.version>17</java.version>
@@ -23,19 +23,13 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Cloud Gateway -->
+        <!-- Spring Cloud Gateway - Hauptabhängigkeit -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-         
-        <!-- HATEOAS Dependency -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-hateoas</artifactId>
-        </dependency>
              
-        <!-- DevTools -->
+        <!-- DevTools für die Entwicklung -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -43,7 +37,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Test -->
+        <!-- Test-Abhängigkeiten -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -53,7 +47,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Cloud Dependencies -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -66,7 +59,6 @@
 
     <build>
         <plugins>
-            <!-- Maven Enforcer Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -91,7 +83,6 @@
                 </executions>
             </plugin>
             
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
