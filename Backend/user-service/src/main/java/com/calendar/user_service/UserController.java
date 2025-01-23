@@ -1,5 +1,6 @@
 package com.calendar.user_service;
 
+import lombok.Data;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,58 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 class UserController {
     private final Map<String, User> users = new ConcurrentHashMap<>();
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginUser) {
+        // Eingabedaten validieren
+        if (loginUser.getEmail() == null || loginUser.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Email und Passwort müssen angegeben werden");
+        }
+    
+        // Benutzer anhand der E-Mail suchen
+        User user = users.values().stream()
+            .filter(u -> u.getEmail().equals(loginUser.getEmail()))
+            .findFirst()
+            .orElse(null);
+    
+        // Benutzer existiert nicht
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Benutzer mit dieser E-Mail wurde nicht gefunden");
+        }
+    
+        // Passwortprüfung
+        if (!user.getPassword().equals(loginUser.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Das eingegebene Passwort ist falsch");
+        }
+    
+        // Erfolgreiche Authentifizierung
+        String token = UUID.randomUUID().toString(); // Dummy-Token
+        return ResponseEntity.ok(EntityModel.of(user,
+            linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel())
+            .add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
+        boolean emailExists = users.values().stream()
+            .anyMatch(u -> u.getEmail().equals(user.getEmail()));
+
+        if (emailExists) {
+            return ResponseEntity.badRequest().body("Email bereits registriert");
+        }
+
+        user.setId(UUID.randomUUID().toString());
+        users.put(user.getId(), user);
+
+        return ResponseEntity.ok(EntityModel.of(user,
+            linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel()));
+    }
 
     @GetMapping("/{id}")
     public EntityModel<User> getUser(@PathVariable String id) {
@@ -40,20 +91,6 @@ class UserController {
 
         return CollectionModel.of(userEntities,
             linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel());
-    }
-
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        user.setId(UUID.randomUUID().toString());
-        users.put(user.getId(), user);
-
-        EntityModel<User> resource = EntityModel.of(user,
-            linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel(),
-            linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users"));
-
-        return ResponseEntity
-            .created(linkTo(methodOn(UserController.class).getUser(user.getId())).toUri())
-            .body(resource);
     }
 
     @PutMapping("/{id}")
@@ -81,6 +118,15 @@ class UserController {
         users.remove(id);
         return ResponseEntity.noContent().build();
     }
+}
+
+@Data
+class User {
+    private String id;
+    private String email;
+    private String name;
+    private String password;
+
 }
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
