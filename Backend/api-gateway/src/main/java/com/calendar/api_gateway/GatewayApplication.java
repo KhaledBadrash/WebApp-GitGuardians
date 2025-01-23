@@ -24,6 +24,8 @@ public class GatewayApplication {
                 .uri("http://localhost:8082"))
             .route("todo-service", r -> r.path("/api/todos/**")
                 .uri("http://localhost:8083"))
+            .route("Category", r -> r.path("/api/category/**")
+            .uri("http://localhost:8085"))
             .build();
     }
 

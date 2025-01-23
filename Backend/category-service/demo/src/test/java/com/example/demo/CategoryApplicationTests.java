@@ -1,10 +1,10 @@
-package com.calendar.user_service;
+package com.example.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserServiceApplicationTests {
+class CategoryApplicationTests {
 
 	@Test
 	void contextLoads() {
