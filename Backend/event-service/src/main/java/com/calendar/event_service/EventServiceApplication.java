@@ -2,9 +2,11 @@ package com.calendar.event_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 import org.springframework.stereotype.Controller;
 import lombok.Data;
 
@@ -19,26 +21,32 @@ public class EventServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventServiceApplication.class, args);
     }
+
+    // Registrierung des DateTime-Scalars
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
+        return wiringBuilder -> wiringBuilder.scalar(graphql.scalars.ExtendedScalars.DateTime);
+    }
 }
 
 // Event-Modellklasse
 @Data
 class Event {
-    private String id;
-    private String title;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private String userId;
-    private Priority priority;
-    private String categoryId;
+    private String id;            // Eindeutige ID des Events
+    private String title;         // Titel des Events
+    private LocalDateTime start;  // Startzeit
+    private LocalDateTime end;    // Endzeit
+    private String userId;        // ID des Benutzers, der das Event erstellt hat
+    private Priority priority;    // Priorität des Events
+    private String categoryId;    // ID der Kategorie (optional)
 }
 
-// Prioritäts-Enum
+// Enum für Prioritäten
 enum Priority {
     HIGH, MEDIUM, LOW
 }
 
-// Event-Controller für GraphQL-Anfragen
+// GraphQL-Controller für Events
 @Controller
 class EventController {
     private final Map<String, Event> events = new ConcurrentHashMap<>();
@@ -50,7 +58,8 @@ class EventController {
             @Argument LocalDateTime start,
             @Argument LocalDateTime end,
             @Argument String userId,
-            @Argument Priority priority) {
+            @Argument Priority priority,
+            @Argument String categoryId) {
         if (start.isAfter(end)) {
             throw new IllegalArgumentException("Startzeit darf nicht nach der Endzeit liegen.");
         }
@@ -62,6 +71,7 @@ class EventController {
         event.setEnd(end);
         event.setUserId(userId);
         event.setPriority(priority);
+        event.setCategoryId(categoryId);
         events.put(event.getId(), event);
         return event;
     }
@@ -73,7 +83,7 @@ class EventController {
                 .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
     }
 
-    // Query: Events eines bestimmten Benutzers abrufen
+    // Query: Alle Events eines bestimmten Benutzers abrufen
     @QueryMapping
     public List<Event> eventsByUser(@Argument String userId) {
         return events.values().stream()
@@ -81,7 +91,7 @@ class EventController {
                 .collect(Collectors.toList());
     }
 
-    // Query: Events innerhalb eines Zeitraums abrufen
+    // Query: Events in einem bestimmten Zeitraum abrufen
     @QueryMapping
     public List<Event> eventsByDateRange(@Argument LocalDateTime start, @Argument LocalDateTime end) {
         return events.values().stream()
@@ -96,7 +106,8 @@ class EventController {
             @Argument String title,
             @Argument LocalDateTime start,
             @Argument LocalDateTime end,
-            @Argument Priority priority) {
+            @Argument Priority priority,
+            @Argument String categoryId) {
         Event event = Optional.ofNullable(events.get(id))
                 .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
 
@@ -104,6 +115,7 @@ class EventController {
         if (start != null) event.setStart(start);
         if (end != null) event.setEnd(end);
         if (priority != null) event.setPriority(priority);
+        if (categoryId != null) event.setCategoryId(categoryId);
         return event;
     }
 
