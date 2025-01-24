@@ -3,16 +3,21 @@ package com.example.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/api/categories")
 @CrossOrigin(origins = "*")
 public class CategoryController {
+
     private final Map<String, Category> categories = new ConcurrentHashMap<>();
 
     @GetMapping("/{id}")
@@ -76,6 +81,6 @@ public class CategoryController {
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class CategoryNotFoundException extends RuntimeException {
     public CategoryNotFoundException(String id) {
-        super("Could not find category " + id);
+        super("Could not find category with id: " + id);
     }
 }
