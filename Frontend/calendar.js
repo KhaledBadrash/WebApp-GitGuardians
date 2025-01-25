@@ -453,4 +453,11 @@ async function initializeApp() {
 
 // Start the application
 initializeApp();
-
+// Export necessary functions for testing
+export {
+    initializeApp,
+    handleError,
+    showNotification,
+    loadCategories,
+    updateActiveViewButton
+};
