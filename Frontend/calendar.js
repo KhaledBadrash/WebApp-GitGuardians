@@ -98,3 +98,97 @@ async function initializeApp() {
 }
 
 initializeApp();
+let calendar = null;
+
+// DOM Elements
+const eventModal = document.getElementById('event-modal');
+const eventForm = document.getElementById('event-form');
+
+// Calendar Initialization
+function initializeCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        editable: true,
+        selectable: true,
+        events: loadEvents,
+        eventClick: handleEventClick,
+        select: handleDateSelect,
+        eventDrop: handleEventDrop,
+        eventResize: handleEventResize
+    });
+    calendar.render();
+}
+
+/// Event Handlers
+async function loadEvents(info, successCallback, failureCallback) {
+    try {
+        const response = await api.events.getEvents(info.start.toISOString(), info.end.toISOString());
+        const events = response.eventsByDateRange.map(event => ({
+            id: event.id,
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            className: `event-${event.priority.toLowerCase()}`,
+            extendedProps: {
+                userId: event.userId,
+                priority: event.priority
+            }
+        }));
+        successCallback(events);
+    } catch (error) {
+        failureCallback(error);
+    }
+}
+
+async function handleEventClick(info) {
+    const event = info.event;
+    if (event.extendedProps.userId !== currentUser.id) {
+        alert('Sie können nur Ihre eigenen Events bearbeiten.');
+        return;
+    }
+
+    document.getElementById('event-title').value = event.title;
+    document.getElementById('event-start').value = formatDateTime(event.start);
+    document.getElementById('event-end').value = formatDateTime(event.end);
+    document.getElementById('event-priority').value = event.extendedProps.priority;
+
+    eventForm.onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const updatedEvent = {
+                title: document.getElementById('event-title').value,
+                start: new Date(document.getElementById('event-start').value),
+                end: new Date(document.getElementById('event-end').value),
+                priority: document.getElementById('event-priority').value
+            };
+
+            await api.events.updateEvent(event.id, updatedEvent);
+            calendar.refetchEvents();
+            closeEventModal();
+        } catch (error) {
+            alert('Fehler beim Aktualisieren des Events: ' + error.message);
+        }
+    };
+
+    openEventModal();
+}
+
+// Utility Functions
+function formatDateTime(date) {
+    return new Date(date).toISOString().slice(0, 16);
+}
+
+function openEventModal() {
+    eventModal.style.display = 'block';
+}
+
+function closeEventModal() {
+    eventModal.style.display = 'none';
+    eventForm.onsubmit = null;
+}
