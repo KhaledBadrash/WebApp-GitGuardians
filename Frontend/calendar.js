@@ -192,3 +192,60 @@ function closeEventModal() {
     eventModal.style.display = 'none';
     eventForm.onsubmit = null;
 }
+const todoForm = document.getElementById('todo-form');
+const todoList = document.getElementById('todo-list');
+
+// Todo Management
+todoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const todoInput = document.getElementById('todo-input');
+    const title = todoInput.value.trim();
+
+    if (!title) return;
+
+    try {
+        const newTodo = await api.todos.createTodo({
+            title,
+            userId: currentUser.id
+        });
+
+        addTodoToList(newTodo);
+        todoInput.value = '';
+    } catch (error) {
+        alert('Fehler beim Erstellen des Todos: ' + error.message);
+    }
+});
+
+async function loadTodos() {
+    try {
+        const todos = await api.todos.getTodos(currentUser.id);
+        todoList.innerHTML = '';
+        todos.forEach(addTodoToList);
+    } catch (error) {
+        alert('Fehler beim Laden der Todos: ' + error.message);
+    }
+}
+
+function addTodoToList(todo) {
+    const li = document.createElement('li');
+    li.className = 'todo-item' + (todo.completed ? ' completed' : '');
+    li.innerHTML = `
+        <input type="checkbox" ${todo.completed ? 'checked' : ''}>
+        <span>${todo.title}</span>
+        <button class="delete-todo">×</button>
+    `;
+    todoList.appendChild(li);
+}
+
+// Theme Management
+function initTheme() {
+    const savedTheme = localStorage.getItem('calendarTheme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('calendarTheme', newTheme);
+});
