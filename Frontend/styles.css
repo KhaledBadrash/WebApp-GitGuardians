@@ -28,3 +28,31 @@ body {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     margin-top: -100px; /* Offset to center visually */
 }
+
+
+/* Calendar Customization */
+#calendar {
+    height: calc(100vh - 200px);
+}
+
+.fc {
+    background-color: white;
+}
+
+/* Event Priority Colors */
+.event-high {
+    background-color: var(--event-high-color) !important;
+    border-color: var(--event-high-color) !important;
+}
+
+.event-medium {
+    background-color: var(--event-medium-color) !important;
+    border-color: var(--event-medium-color) !important;
+    color: #000 !important;
+}
+
+.event-low {
+    background-color: var(--event-low-color) !important;
+    border-color: var(--event-low-color) !important;
+}
+
