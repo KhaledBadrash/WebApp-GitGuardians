@@ -110,6 +110,115 @@
     </div>
 </div>
 
+        <!-- Main Application Content -->
+        <div id="main-container" class="d-none">
+            <!-- Header -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Termin Assistent</a>
+                    <div class="d-flex align-items-center">
+                        <span class="text-white me-3" id="user-name"></span>
+                        <button id="logout-btn" class="btn btn-outline-light">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+          <!-- Main Content -->
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-check2-square" aria-hidden="true"></i> Todos
+                    </h5>
+                    <form id="todo-form" class="mb-3">
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="todo-input" 
+                                placeholder="Neues Todo"
+                                aria-label="Neues Todo eingeben"
+                            >
+                            <button 
+                                class="btn btn-primary" 
+                                type="submit"
+                                title="Todo hinzufügen"
+                                aria-label="Todo hinzufügen"
+                            >
+                                <i class="bi bi-plus" aria-hidden="true"></i>
+                                <span class="visually-hidden">Todo hinzufügen</span>
+                            </button>
+                        </div>
+                    </form>
+                    <ul id="todo-list" class="list-group">
+                        <!-- Todos will be added here dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+                    <!-- Calendar -->
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Modal -->
+            <div class="modal fade" id="event-modal" tabindex="-1" aria-labelledby="event-modal-title" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="event-modal-title">Event</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="event-form">
+                                <div class="mb-3">
+                                    <label for="event-title" class="form-label">Titel</label>
+                                    <input type="text" class="form-control" id="event-title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="event-start" class="form-label">Startzeit</label>
+                                    <input type="datetime-local" class="form-control" id="event-start" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="event-end" class="form-label">Endzeit</label>
+                                    <input type="datetime-local" class="form-control" id="event-end" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="event-priority" class="form-label">Priorität</label>
+                                    <select class="form-select" id="event-priority" required>
+                                        <option value="HIGH">Hoch</option>
+                                        <option value="MEDIUM">Mittel</option>
+                                        <option value="LOW">Niedrig</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                            <button type="submit" form="event-form" class="btn btn-primary">Speichern</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Container for Notifications -->
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <!-- Toasts will be added here dynamically -->
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <!-- Bootstrap Bundle with Popper -->
