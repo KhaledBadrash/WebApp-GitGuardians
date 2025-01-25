@@ -1,0 +1,30 @@
+/* Custom Properties */
+:root {
+    --fc-border-color: #dee2e6;
+    --fc-today-bg-color: #f8f9fa;
+    --event-high-color: #dc3545;
+    --event-medium-color: #ffc107;
+    --event-low-color: #198754;
+}
+
+/* General Layout */
+body {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.app-container {
+    min-height: 100vh;
+}
+
+/* Auth Container */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.auth-box {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-top: -100px; /* Offset to center visually */
+}
