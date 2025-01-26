@@ -5,10 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
+
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -18,23 +19,24 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @CrossOrigin(origins = "*")
 public class CategoryController {
 
-    private final Map<String, Category> categories = new ConcurrentHashMap<>();
+    private final Map<Integer, Category> categories = new ConcurrentHashMap<>();
+    private final AtomicInteger idGenerator = new AtomicInteger(1); // ID-Generator
 
     @GetMapping("/{id}")
-    public EntityModel<Category> getCategory(@PathVariable String id) {
+    public ResponseEntity<EntityModel<Category>> getCategory(@PathVariable int id) {
         Category category = categories.get(id);
         if (category == null) {
             throw new CategoryNotFoundException(id);
         }
-        return EntityModel.of(category,
+        return ResponseEntity.ok(EntityModel.of(category,
             linkTo(methodOn(CategoryController.class).getCategory(id)).withSelfRel(),
-            linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId())).withRel("user-categories"));
+            linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId())).withRel("user-categories")));
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<Category>> getAllCategories(@RequestParam String userId) {
+    public CollectionModel<EntityModel<Category>> getAllCategories(@RequestParam int userId) {
         List<EntityModel<Category>> categoryEntities = categories.values().stream()
-            .filter(category -> category.getUserId().equals(userId))
+            .filter(category -> category.getUserId() == userId)
             .map(category -> EntityModel.of(category,
                 linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel()))
             .collect(Collectors.toList());
@@ -43,8 +45,8 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody Category category) {
-        category.setId(UUID.randomUUID().toString());
+    public ResponseEntity<EntityModel<Category>> createCategory(@RequestBody Category category) {
+        category.setId(idGenerator.getAndIncrement()); // Generiere neue ID
         categories.put(category.getId(), category);
         EntityModel<Category> resource = EntityModel.of(category,
             linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
@@ -55,9 +57,9 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable String id, @RequestBody Category newCategory) {
-        Category category = categories.get(id);
-        if (category == null) {
+    public ResponseEntity<EntityModel<Category>> updateCategory(@PathVariable int id, @RequestBody Category newCategory) {
+        Category existingCategory = categories.get(id);
+        if (existingCategory == null) {
             throw new CategoryNotFoundException(id);
         }
         newCategory.setId(id);
@@ -69,7 +71,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable String id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
         if (!categories.containsKey(id)) {
             throw new CategoryNotFoundException(id);
         }
@@ -80,7 +82,7 @@ public class CategoryController {
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class CategoryNotFoundException extends RuntimeException {
-    public CategoryNotFoundException(String id) {
+    public CategoryNotFoundException(int id) {
         super("Could not find category with id: " + id);
     }
 }
