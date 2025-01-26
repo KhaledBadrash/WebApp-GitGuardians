@@ -6,5 +6,6 @@ Die Architektur der Anwendung basiert auf einem API-Gateway, das als zentraler E
 Das Frontend wurde mit HTML, CSS und JavaScript programmiert und bietet eine benutzerfreundliche Oberfläche. Zu den Hauptfunktionen zählen eine Kalenderansicht mit verschiedenen Modi (Tag, Woche, Monat), eine To-Do-Liste, Statistiken sowie Formulare und Dialoge zur Erstellung und Verwaltung von Terminen und Kategorien.
 
 Die CORS-Konfiguration (Cross-Origin Resource Sharing) ist eine Sicherheitsmechanik in Webanwendungen, die regelt, welche Ressourcen (z. B. APIs, Dateien) von einer Webanwendung auf einer Domain von einer anderen Domain aus aufgerufen werden dürfen. Diese Mechanik ist besonders wichtig, wenn das Frontend und das Backend einer Anwendung auf unterschiedlichen Servern laufen oder verschiedene Domains nutzen.
+Zusammenfassend vereint das Projekt eine flexible Microservice-Architektur mit einer intuitiven Benutzeroberfläche. Das API-Gateway ermöglicht eine effiziente Kommunikation zwischen den Diensten, während das Frontend durch seine interaktiven Funktionen die Nutzer optimal unterstützt. Die Anwendung ist bereit, zukünftigen Anforderungen gerecht zu werden.
 
 
