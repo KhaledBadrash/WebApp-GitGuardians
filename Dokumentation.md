@@ -19,7 +19,7 @@ Zusammenfassend vereint das Projekt eine flexible Microservice-Architektur mit e
 Der GraphQL Event Service ist die zentrale Komponente zur Verwaltung von Veranstaltungsdaten innerhalb der Kalenderanwendung. Er ermöglicht es den Nutzern, gezielt Informationen zu Veranstaltungen abzurufen, neue Einträge zu erstellen sowie bestehende Daten flexibel zu bearbeiten oder zu löschen. Unser GraphQL Service bietet dabei die Möglichkeit, präzise nur die tatsächlich benötigten Daten abzufragen, was die Effizienz der API signifikant steigert.
 Ein wesentlicher Bestandteil dieses Services ist die Unterstützung von Datum- und Zeitformaten, die über die DateTimeScalarConfiguration integriert werden. Dabei wird die ExtendedScalars.DateTime-Erweiterung genutzt, um eine standardisierte Verarbeitung von Datums- und Zeitwerten innerhalb von GraphQL-Abfragen und -Mutationen zu gewährleisten.
 
-Die Hauptbestandteile des Event Service sind:
+**Die Hauptbestandteile des Event Service sind:**
 
 DateTimeScalarConfiguration: Stellt die GraphQL-Skalartypen für Datum und Zeit bereit.
 EventServiceApplication: Die Hauptanwendung für den Event-Service, die mit Spring Boot betrieben wird.
@@ -27,6 +27,34 @@ EventServiceApplicationTests: Eine Testklasse zur Sicherstellung der erfolgreich
 Durch den Einsatz von Spring Boot und GraphQL ermöglicht dieser Service eine hochgradig anpassbare und performante Event-Datenverwaltung für Anwendungen, die Echtzeitdaten benötigen.
 
 Mit seiner Flexibilität und Erweiterbarkeit ist unser GraphQL Event Service optimal darauf ausgelegt, große Datenmengen effizient zu verarbeiten und die Anforderungen moderner Anwendungen zu erfüllen.
+###Achitektur(event service)
+1. GraphQL-Integration
+Für die effiziente Datenabfrage setzen wir auf GraphQL, das durch spring-boot-starter-graphql integriert wurde. GraphQL ermöglicht es, nur die benötigten Daten anzufordern, wodurch die Performance verbessert wird.
+
+Wichtige Klasse:
+DateTimeScalarConfiguration: Registriert den DateTime-Skalartyp von ExtendedScalars, um komplexe Datums- und Zeitwerte zu verarbeiten.
+Code-Ausschnitt:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
