@@ -46,28 +46,12 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Category>> createCategory(@RequestBody Category category) {
-        category.setId(idGenerator.getAndIncrement()); // Generiere neue ID
-        categories.put(category.getId(), category);
-        EntityModel<Category> resource = EntityModel.of(category,
-            linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
-            linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId())).withRel("user-categories"));
-        return ResponseEntity
-            .created(linkTo(methodOn(CategoryController.class).getCategory(category.getId())).toUri())
-            .body(resource);
+        return saveCategory(category, null); // Falls keine ID vorhanden ist -> neue Kategorie erstellen
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<Category>> updateCategory(@PathVariable int id, @RequestBody Category newCategory) {
-        Category existingCategory = categories.get(id);
-        if (existingCategory == null) {
-            throw new CategoryNotFoundException(id);
-        }
-        newCategory.setId(id);
-        categories.put(id, newCategory);
-        EntityModel<Category> resource = EntityModel.of(newCategory,
-            linkTo(methodOn(CategoryController.class).getCategory(id)).withSelfRel(),
-            linkTo(methodOn(CategoryController.class).getAllCategories(newCategory.getUserId())).withRel("user-categories"));
-        return ResponseEntity.ok(resource);
+    public ResponseEntity<EntityModel<Category>> updateCategory(@PathVariable int id, @RequestBody Category category) {
+        return saveCategory(category, id); // Falls ID vorhanden -> Update
     }
 
     @DeleteMapping("/{id}")
@@ -78,8 +62,36 @@ public class CategoryController {
         categories.remove(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * *Gemeinsame Methode zum Erstellen und Aktualisieren einer Kategorie*
+     * Falls id null ist → Neue Kategorie wird erstellt.  
+     * Falls id gesetzt ist → Vorhandene Kategorie wird aktualisiert.  
+     */
+    public  ResponseEntity<EntityModel<Category>> saveCategory(Category category, Integer id) {
+        if (id == null) { // Neue Kategorie erstellen
+            category.setId(idGenerator.getAndIncrement());
+        } else { // Vorhandene Kategorie aktualisieren
+            if (!categories.containsKey(id)) {
+                throw new CategoryNotFoundException(id);
+            }
+            category.setId(id);
+        }
+        categories.put(category.getId(), category); // Speichern/Aktualisieren
+
+        EntityModel<Category> resource = EntityModel.of(category,
+            linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
+            linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId())).withRel("user-categories"));
+
+        return id == null
+            ? ResponseEntity.created(linkTo(methodOn(CategoryController.class).getCategory(category.getId())).toUri()).body(resource)
+            : ResponseEntity.ok(resource);
+    }
 }
 
+/**
+ * *Fehlermeldung für nicht gefundene Kategorien*
+ */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class CategoryNotFoundException extends RuntimeException {
     public CategoryNotFoundException(int id) {
