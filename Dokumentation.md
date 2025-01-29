@@ -17,8 +17,14 @@ Zusammenfassend vereint das Projekt eine flexible Microservice-Architektur mit e
 ## GraphQL(event-service)
 ### Einführung
 Der GraphQL Event Service ist die zentrale Komponente zur Verwaltung von Veranstaltungsdaten innerhalb der Kalenderanwendung. Er ermöglicht es den Nutzern, gezielt Informationen zu Veranstaltungen abzurufen, neue Einträge zu erstellen sowie bestehende Daten flexibel zu bearbeiten oder zu löschen. Unser GraphQL Service bietet dabei die Möglichkeit, präzise nur die tatsächlich benötigten Daten abzufragen, was die Effizienz der API signifikant steigert.
+Ein wesentlicher Bestandteil dieses Services ist die Unterstützung von Datum- und Zeitformaten, die über die DateTimeScalarConfiguration integriert werden. Dabei wird die ExtendedScalars.DateTime-Erweiterung genutzt, um eine standardisierte Verarbeitung von Datums- und Zeitwerten innerhalb von GraphQL-Abfragen und -Mutationen zu gewährleisten.
 
-Der Service basiert auf Spring Boot und ist mit erweiterten GraphQL-Skalaren ausgestattet, die beispielsweise komplexe Datentypen wie Datum und Uhrzeit unterstützen. Zusätzlich ermöglicht die Einbindung von Web- und WebFlux-Technologien sowohl synchrone als auch reaktive Anfragen. Durch die klare Struktur und Konfiguration des Codes, etwa durch den Einsatz von Maven und Lombok, wird eine schlanke und wartbare Basis geschaffen.
+Die Hauptbestandteile des Event Service sind:
+
+DateTimeScalarConfiguration: Stellt die GraphQL-Skalartypen für Datum und Zeit bereit.
+EventServiceApplication: Die Hauptanwendung für den Event-Service, die mit Spring Boot betrieben wird.
+EventServiceApplicationTests: Eine Testklasse zur Sicherstellung der erfolgreichen Kontextinitialisierung der Anwendung.
+Durch den Einsatz von Spring Boot und GraphQL ermöglicht dieser Service eine hochgradig anpassbare und performante Event-Datenverwaltung für Anwendungen, die Echtzeitdaten benötigen.
 
 Mit seiner Flexibilität und Erweiterbarkeit ist unser GraphQL Event Service optimal darauf ausgelegt, große Datenmengen effizient zu verarbeiten und die Anforderungen moderner Anwendungen zu erfüllen.
 
