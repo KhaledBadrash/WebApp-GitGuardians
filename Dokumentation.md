@@ -1,0 +1,63 @@
+## Einleitung
+Unsere Anwendung ist ein webbasierter Terminkalender, der es Benutzern ermöglicht, Termine, Aufgaben und Kategorien effizient zu verwalten. Das System wird zentral durch ein API-Gateway gesteuert. Ziel der Anwendung ist es, eine benutzerfreundliche und skalierbare Lösung anzubieten, die sowohl im Frontend als auch im Backend durchdacht umgesetzt wurde. Die Anwendung soll Benutzern helfen, ihren Alltag besser zu organisieren, indem sie eine zentrale Plattform für die Verwaltung von Terminen, Aufgaben und Kategorien bietet.
+
+Die Architektur der Anwendung basiert auf einem API-Gateway, das als zentraler Einstiegspunkt für alle Anfragen fungiert und diese gezielt an die entsprechenden Microservices weiterleitet. Diese Microservices sind eigenständige Module, die spezifische Aufgaben übernehmen, wie die Verwaltung von Kategorien, Aufgaben und Benutzern durch den Category Service, den To-Do Service und den User Service über REST-APIs. Für die Verwaltung von Ereignissen kommt der Event Service zum Einsatz, der eine flexible Datenabfrage mittels GraphQL ermöglicht. Während REST-APIs klassische CRUD-Operationen ermöglichen, bietet GraphQL die Möglichkeit, nur die benötigten Daten mit minimalem Overhead abzufragen.
+
+Das Frontend wurde mit HTML, CSS und JavaScript programmiert und bietet eine benutzerfreundliche Oberfläche. Zu den Hauptfunktionen zählen eine Kalenderansicht mit verschiedenen Modi (Tag, Woche, Monat), eine To-Do-Liste, Statistiken sowie Formulare und Dialoge zur Erstellung und Verwaltung von Terminen und Kategorien.
+
+Die CORS-Konfiguration (Cross-Origin Resource Sharing) ist eine Sicherheitsmechanik in Webanwendungen, die regelt, welche Ressourcen (z. B. APIs, Dateien) von einer Webanwendung auf einer Domain von einer anderen Domain aus aufgerufen werden dürfen. Diese Mechanik ist besonders wichtig, wenn das Frontend und das Backend einer Anwendung auf unterschiedlichen Servern laufen oder verschiedene Domains nutzen.
+
+Zusammenfassend vereint das Projekt eine flexible Microservice-Architektur mit einer intuitiven Benutzeroberfläche. Das API-Gateway ermöglicht eine effiziente Kommunikation zwischen den Diensten, während das Frontend durch seine interaktiven Funktionen die Nutzer optimal unterstützt. Die Anwendung ist bereit, zukünftigen Anforderungen gerecht zu werden.
+
+
+
+
+
+
+## GraphQL(event-service)
+### Einführung
+Der GraphQL Event Service ist die zentrale Komponente zur Verwaltung von Veranstaltungsdaten innerhalb der Kalenderanwendung. Er ermöglicht es den Nutzern, gezielt Informationen zu Veranstaltungen abzurufen, neue Einträge zu erstellen sowie bestehende Daten flexibel zu bearbeiten oder zu löschen. Unser GraphQL Service bietet dabei die Möglichkeit, präzise nur die tatsächlich benötigten Daten abzufragen, was die Effizienz der API signifikant steigert.
+Ein wesentlicher Bestandteil dieses Services ist die Unterstützung von Datum- und Zeitformaten, die über die DateTimeScalarConfiguration integriert werden. Dabei wird die ExtendedScalars.DateTime-Erweiterung genutzt, um eine standardisierte Verarbeitung von Datums- und Zeitwerten innerhalb von GraphQL-Abfragen und -Mutationen zu gewährleisten.
+
+**Die Hauptbestandteile des Event Service sind:**
+
+DateTimeScalarConfiguration: Stellt die GraphQL-Skalartypen für Datum und Zeit bereit.
+EventServiceApplication: Die Hauptanwendung für den Event-Service, die mit Spring Boot betrieben wird.
+EventServiceApplicationTests: Eine Testklasse zur Sicherstellung der erfolgreichen Kontextinitialisierung der Anwendung.
+Durch den Einsatz von Spring Boot und GraphQL ermöglicht dieser Service eine hochgradig anpassbare und performante Event-Datenverwaltung für Anwendungen, die Echtzeitdaten benötigen.
+
+Mit seiner Flexibilität und Erweiterbarkeit ist unser GraphQL Event Service optimal darauf ausgelegt, große Datenmengen effizient zu verarbeiten und die Anforderungen moderner Anwendungen zu erfüllen.
+###Achitektur(event service)
+1. GraphQL-Integration
+Für die effiziente Datenabfrage setzen wir auf GraphQL, das durch spring-boot-starter-graphql integriert wurde. GraphQL ermöglicht es, nur die benötigten Daten anzufordern, wodurch die Performance verbessert wird.
+
+Wichtige Klasse:
+DateTimeScalarConfiguration: Registriert den DateTime-Skalartyp von ExtendedScalars, um komplexe Datums- und Zeitwerte zu verarbeiten.
+Code-Ausschnitt:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
