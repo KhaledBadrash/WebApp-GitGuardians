@@ -80,16 +80,42 @@ Mithilfe von **Spring Boot Test** und **Spring GraphQL Test** prüfen wir die Fu
 - **Spring Boot Test** lädt den Anwendungskontext und führt Tests auf Service-Ebene aus.  
 - **Spring GraphQL Test** ermöglicht gezielte Tests von GraphQL-Queries, um sicherzustellen, dass die API erwartungsgemäß auf Anfragen reagiert.
   
-**### Bezug zu unserem Code**  
+**Bezug zu unserem Code**  
 In der `EventServiceApplicationTests`-Klasse werden Unit-Tests ausgeführt, um zu prüfen, ob der Anwendungskontext korrekt geladen wird und die grundlegende Funktionalität gewährleistet ist.  
+## Erklärung des Schemas##
+Das GraphQL-Schema des Event Service definiert die Struktur und die möglichen Interaktionen mit den Veranstaltungsdaten. Es ermöglicht sowohl das Abrufen als auch das Erstellen, Aktualisieren und Löschen von Events. Die Implementierung erfolgt mit Spring Boot und GraphQL, wobei spezielle Datentypen wie DateTime unterstützt werden.
 
+**1. Queries: Abruf von Event-Daten**
+**Ein Event anhand der ID abrufen**
+```
+@QueryMapping
+public Event event(@Argument String id) {
+    return Optional.ofNullable(events.get(id))
+            .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
+}
+```
+Diese Methode sucht ein Event anhand der id. Falls es nicht existiert, wird eine NoSuchElementException geworfen.
 
+**Alle Events eines Benutzers abrufen**
+```
+@QueryMapping
+    public List<Event> eventsByUser(@Argument String userId) {
+        return events.values().stream()
+                .filter(event -> event.getUserId().equals(userId))
+                .collect(Collectors.toList());
+    }
+```
+Hier werden alle Events zurückgegeben, die einem bestimmten Benutzer gehören. Die userId dient als Filterkriterium.
 
-
-
-
-
-
+**Events innerhalb eines bestimmten Zeitraums abrufen**
+```
+@QueryMapping
+    public List<Event> eventsByDateRange(@Argument LocalDateTime start, @Argument LocalDateTime end) {
+        return events.values().stream()
+                .filter(event -> !event.getStart().isBefore(start) && !event.getEnd().isAfter(end))
+                .collect(Collectors.toList());
+    }
+```
 
 
 
