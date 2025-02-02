@@ -1,3 +1,4 @@
+/* Global color and layout variables */
 :root {
     --primary-blue: #1a73e8;
     --border-color: #dadce0;
@@ -6,7 +7,7 @@
     --background-hover: #f1f3f4;
     --sidebar-width: 256px;
 }
-
+/* Reset default styles for consistency */
 * {
     margin: 0;
     padding: 0;
@@ -18,7 +19,7 @@ body {
     color: var(--text-primary);
     overflow: hidden;
 }
-
+ /* Defines the main layout of the calendar as a flexible vertical structure */
 .calendar-wrapper {
     height: 100vh;
     display: flex;
