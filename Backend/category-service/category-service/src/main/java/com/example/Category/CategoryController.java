@@ -24,15 +24,22 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Category>> getCategory(@PathVariable int id) {
+        // Holt die Kategorie aus der Liste/Map basierend auf der ID
         Category category = categories.get(id);
+        
+        // Falls die Kategorie nicht existiert, wird eine benutzerdefinierte Exception ausgelöst
         if (category == null) {
             throw new CategoryNotFoundException(id);
         }
+    
+        // Erstellt eine EntityModel-Instanz mit der Kategorie und fügt Hypermedia-Links hinzu
         return ResponseEntity.ok(EntityModel.of(category,
+            // Fügt einen Link zur aktuellen Kategorie hinzu (Self-Link)
             linkTo(methodOn(CategoryController.class).getCategory(id)).withSelfRel(),
+            // Fügt einen Link zu allen Kategorien des Benutzers hinzu
             linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId())).withRel("user-categories")));
     }
-
+    
     @GetMapping
     public CollectionModel<EntityModel<Category>> getAllCategories(@RequestParam int userId) {
         List<EntityModel<Category>> categoryEntities = categories.values().stream()
