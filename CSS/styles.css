@@ -150,7 +150,7 @@ body {
     background-color: var(--border-color);
     border-radius: 4px;
 }
-
+/* Button to create a new event*/
 .create-event-btn {
     width: 100%;
     padding: 12px 24px;
