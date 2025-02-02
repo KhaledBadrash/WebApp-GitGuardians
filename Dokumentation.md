@@ -31,7 +31,7 @@ Mit seiner Flexibilität und Erweiterbarkeit ist unser GraphQL Event Service opt
 **1. GraphQL-Integration**
 Für die effiziente Datenabfrage setzen wir auf GraphQL, das durch spring-boot-starter-graphql integriert wurde. GraphQL ermöglicht es, nur die benötigten Daten anzufordern, wodurch die Performance verbessert wird.
 
-Wichtige Klasse:
+**Wichtige Klasse:**
 DateTimeScalarConfiguration: Registriert den DateTime-Skalartyp von ExtendedScalars, um komplexe Datums- und Zeitwerte zu verarbeiten.
 Code-Ausschnitt:
 **DateTimeScalarConfiguration.java**
@@ -46,19 +46,19 @@ public class DateTimeScalarConfiguration {
 
 }
 ```
-**2. Erweiterte Datentypen **
+**2. Erweiterte Datentypen**
 Um komplexe Datums- und Zeitangaben im Event-Service korrekt zu verarbeiten, verwenden wir die Bibliothek graphql-java-extended-scalars. Diese bietet den erweiterten ExtendedScalars.DateTime-Typ, der speziell für die Verwendung in GraphQL entwickelt wurde und sicherstellt, dass Datumsangaben korrekt formatiert und verfügbar sind.
-in eine mk datei umwandeln
+
 Bezug zu unserem Code:
 Der DateTime-Datentyp wird in der DateTimeScalarConfiguration-Klasse registriert und in die Laufzeitverkabelung des GraphQL-Schemas integriert, sodass er in API-Anfragen und -Antworten genutzt werden kann.
 
 **3.Reduzierung von Wiederholender Code durch Lombok**
 Ein wichtiger Teil unserer Architektur ist der Einsatz von Lombok, um wiederholten Code zu vermeiden. Lombok generiert automatisch Getter, Setter, Konstruktoren und Builder-Methoden, was den Code übersichtlicher und wartungsfreundlicher macht.
 
-Technische Details:
+**Technische Details:**
 Lombok übernimmt die automatische Generierung von Methoden wie Getter, Setter und Konstruktoren, wodurch die Notwendigkeit entfällt, diese manuell zu schreiben und die Lesbarkeit sowie Wartbarkeit des Codes verbessert wird.
 
-Bezug zu unserem Code:
+**Bezug zu unserem Code:**
 In Klassen wie **EventServiceApplication** hilft Lombok, redundante Codeteile zu eliminieren und steigert die Entwicklungseffizienz.
 
 
@@ -72,7 +72,16 @@ In Klassen wie **EventServiceApplication** hilft Lombok, redundante Codeteile zu
 | pom.xml                        | Fügt die graphql-java-extended-scalars-Bibliothek als Abhängigkeit hinzu              |
 
 
+**4.Teststrategie**  
 
+Um die Stabilität und Zuverlässigkeit unseres Services sicherzustellen, setzen wir auf eine umfassende Teststrategie, die sowohl Unit- als auch Integrationstests umfasst.  
+Mithilfe von **Spring Boot Test** und **Spring GraphQL Test** prüfen wir die Funktionsweise der GraphQL-API und gewährleisten, dass der Service in allen Szenarien korrekt arbeitet.  
+**Technische Details**  
+- **Spring Boot Test** lädt den Anwendungskontext und führt Tests auf Service-Ebene aus.  
+- **Spring GraphQL Test** ermöglicht gezielte Tests von GraphQL-Queries, um sicherzustellen, dass die API erwartungsgemäß auf Anfragen reagiert.
+  
+**### Bezug zu unserem Code**  
+In der `EventServiceApplicationTests`-Klasse werden Unit-Tests ausgeführt, um zu prüfen, ob der Anwendungskontext korrekt geladen wird und die grundlegende Funktionalität gewährleistet ist.  
 
 
 
