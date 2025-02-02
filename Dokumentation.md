@@ -116,14 +116,68 @@ Hier werden alle Events zurückgegeben, die einem bestimmten Benutzer gehören. 
                 .collect(Collectors.toList());
     }
 ```
+Diese Methode filtert Events basierend auf dem Start- und Enddatum und gibt nur diejenigen zurück, die sich innerhalb des angegebenen Zeitraums befinden.
+
+**2. Mutations: Erstellung und Bearbeitung von Events**
+```
+public Event createEvent(
+            @Argument String title,
+            @Argument LocalDateTime start,
+            @Argument LocalDateTime end,
+            @Argument String userId,
+            @Argument Priority priority,
+            @Argument String categoryId) {
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("Startzeit darf nicht nach der Endzeit liegen.");
+        }
+
+        Event event = new Event();
+        event.setId(UUID.randomUUID().toString());
+        event.setTitle(title);
+        event.setStart(start);
+        event.setEnd(end);
+        event.setUserId(userId);
+        event.setPriority(priority);
+        event.setCategoryId(categoryId);
+        events.put(event.getId(), event);
+        return event;
+    }
+```
+Diese Methode erstellt ein neues Event. Falls das Startdatum nach dem Enddatum liegt, wird eine IllegalArgumentException ausgelöst.
 
 
+**Ein bestehendes Event aktualisieren**
+```
+@MutationMapping
+public Event updateEvent(
+        @Argument String id,
+        @Argument String title,
+        @Argument LocalDateTime start,
+        @Argument LocalDateTime end,
+        @Argument Priority priority,
+        @Argument String categoryId) {
+    
+    Event event = Optional.ofNullable(events.get(id))
+            .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
 
+    if (title != null) event.setTitle(title);
+    if (start != null) event.setStart(start);
+    if (end != null) event.setEnd(end);
+    if (priority != null) event.setPriority(priority);
+    if (categoryId != null) event.setCategoryId(categoryId);
 
+    return event;
+```
+Bestehende Events können über diese Methode aktualisiert werden. Falls die id nicht existiert, wird eine NoSuchElementException geworfen.
 
+**Ein Event löschen**
+```
+public boolean deleteEvent(@Argument String id) {
+    return events.remove(id) != null;
+}
 
-
-
+```
+Diese Methode löscht ein Event anhand der id und gibt true zurück, falls das Event erfolgreich entfernt wurde.
 
 
 
