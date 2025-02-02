@@ -42,14 +42,21 @@ public class CategoryController {
     
     @GetMapping
     public CollectionModel<EntityModel<Category>> getAllCategories(@RequestParam int userId) {
+        // Erstellt eine Liste von EntityModels für Kategorien des angegebenen Benutzers
         List<EntityModel<Category>> categoryEntities = categories.values().stream()
+            // Filtert die Kategorien basierend auf der userId
             .filter(category -> category.getUserId() == userId)
+            // Erstellt ein EntityModel für jede Kategorie mit einem Self-Link
             .map(category -> EntityModel.of(category,
                 linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel()))
+            // Sammeln der EntityModels in einer Liste
             .collect(Collectors.toList());
+    
+        // Erstellt eine CollectionModel, die die gefilterten Kategorien enthält und einen Self-Link hinzufügt
         return CollectionModel.of(categoryEntities,
             linkTo(methodOn(CategoryController.class).getAllCategories(userId)).withSelfRel());
     }
+    
 
     @PostMapping
     public ResponseEntity<EntityModel<Category>> createCategory(@RequestBody Category category) {
