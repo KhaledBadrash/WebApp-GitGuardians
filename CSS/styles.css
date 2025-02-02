@@ -87,7 +87,7 @@ body {
 .menu-btn:hover {
     background-color: var(--background-hover);
 }
-
+/* Button to navigate to today's date */
 .today-btn {
     padding: 0 24px;
     height: 36px;
@@ -96,7 +96,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
 }
-
+/* Arrow navigation buttons*/
 .nav-arrows button {
     width: 32px;
     height: 32px;
@@ -111,7 +111,7 @@ body {
     font-weight: 400;
     margin: 0 12px;
 }
-
+/* Dropdown selector for different calendar views */
 .view-selector {
     padding: 0 12px;
     height: 36px;
