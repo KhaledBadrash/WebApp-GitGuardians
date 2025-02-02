@@ -42,6 +42,7 @@ body {
     gap: 8px;
 }
 
+/*Logo and title */
 .calendar-branding {
     display: flex;
     align-items: center;
