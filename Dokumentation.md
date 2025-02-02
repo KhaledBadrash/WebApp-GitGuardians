@@ -28,12 +28,49 @@ Durch den Einsatz von Spring Boot und GraphQL ermöglicht dieser Service eine ho
 
 Mit seiner Flexibilität und Erweiterbarkeit ist unser GraphQL Event Service optimal darauf ausgelegt, große Datenmengen effizient zu verarbeiten und die Anforderungen moderner Anwendungen zu erfüllen.
 ###Achitektur(event service)
-1. GraphQL-Integration
+**1. GraphQL-Integration**
 Für die effiziente Datenabfrage setzen wir auf GraphQL, das durch spring-boot-starter-graphql integriert wurde. GraphQL ermöglicht es, nur die benötigten Daten anzufordern, wodurch die Performance verbessert wird.
 
 Wichtige Klasse:
 DateTimeScalarConfiguration: Registriert den DateTime-Skalartyp von ExtendedScalars, um komplexe Datums- und Zeitwerte zu verarbeiten.
 Code-Ausschnitt:
+**DateTimeScalarConfiguration.java**
+
+```java
+@Configuration
+public class DateTimeScalarConfiguration {
+    @Bean
+    public GraphQLScalarType dateTimeScalar() {
+        return ExtendedScalars.DateTime;
+    }
+
+}
+```
+**2. Erweiterte Datentypen **
+Um komplexe Datums- und Zeitangaben im Event-Service korrekt zu verarbeiten, verwenden wir die Bibliothek graphql-java-extended-scalars. Diese bietet den erweiterten ExtendedScalars.DateTime-Typ, der speziell für die Verwendung in GraphQL entwickelt wurde und sicherstellt, dass Datumsangaben korrekt formatiert und verfügbar sind.
+in eine mk datei umwandeln
+Bezug zu unserem Code:
+Der DateTime-Datentyp wird in der DateTimeScalarConfiguration-Klasse registriert und in die Laufzeitverkabelung des GraphQL-Schemas integriert, sodass er in API-Anfragen und -Antworten genutzt werden kann.
+
+**3.Reduzierung von Wiederholender Code durch Lombok**
+Ein wichtiger Teil unserer Architektur ist der Einsatz von Lombok, um wiederholten Code zu vermeiden. Lombok generiert automatisch Getter, Setter, Konstruktoren und Builder-Methoden, was den Code übersichtlicher und wartungsfreundlicher macht.
+
+Technische Details:
+Lombok übernimmt die automatische Generierung von Methoden wie Getter, Setter und Konstruktoren, wodurch die Notwendigkeit entfällt, diese manuell zu schreiben und die Lesbarkeit sowie Wartbarkeit des Codes verbessert wird.
+
+Bezug zu unserem Code:
+In Klassen wie **EventServiceApplication** hilft Lombok, redundante Codeteile zu eliminieren und steigert die Entwicklungseffizienz.
+
+
+**Zusammenfassung der relevanten Code-Stellen**
+
+| **Datei**                        | **Funktion**                                                                            |
+|-----------------------------------|----------------------------------------------------------------------------------------|
+| DateTimeScalarConfiguration.java | Registriert den DateTime-Skalar für GraphQL                                           |
+| EventServiceApplication.java   | Startet die Anwendung und lädt die Konfiguration                                        |
+| EventResolver.java            | Verwendet LocalDateTime, das automatisch in DateTime umgewandelt wird               |
+| pom.xml                        | Fügt die graphql-java-extended-scalars-Bibliothek als Abhängigkeit hinzu              |
+
 
 
 
