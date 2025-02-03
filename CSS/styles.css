@@ -407,7 +407,7 @@ body {
 .resize-handle.bottom {
     bottom: -3px;
 }
-
+/* Improved event appearance*/
 .resize-handle:hover,
 .resize-handle.resizing {
     background: rgba(0,0,0,0.1);
@@ -449,7 +449,7 @@ body {
 .event-item.priority-low {
     background: linear-gradient(45deg, #28a745, #5dd675);
 }
-
+/* Dragging effect for events */
 .event-item.dragging {
     opacity: 0.5;
     transform: scale(0.95);
