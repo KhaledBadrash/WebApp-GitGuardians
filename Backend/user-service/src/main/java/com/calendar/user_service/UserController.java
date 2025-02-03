@@ -14,12 +14,19 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+// Diese Klasse ist ein Spring REST-Controller, der Benutzerverwaltung implementiert
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*", allowCredentials = "true")
 class UserController {
+    
+    // Eine thread-sichere Map zur Speicherung von Benutzerdaten
     private final Map<String, User> users = new ConcurrentHashMap<>();
 
+    /**
+     * Login-Methode
+     * Prüft, ob die Anmeldedaten korrekt sind, und gibt einen Token zurück.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginUser) {
         // Eingabedaten validieren
@@ -46,12 +53,14 @@ class UserController {
                 .body("Das eingegebene Passwort ist falsch");
         }
     
-        // Erfolgreiche Authentifizierung
-        String token = UUID.randomUUID().toString(); // Dummy-Token
+        // Erfolgreiche Authentifizierung - Dummy-Token generieren
+        String token = UUID.randomUUID().toString();
         return ResponseEntity.ok(EntityModel.of(user,
             linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel())
             .add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")));
     }
+
+
 
        /**
      * Registrierungsmethode
