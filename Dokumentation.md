@@ -180,10 +180,26 @@ public boolean deleteEvent(@Argument String id) {
 Diese Methode löscht ein Event anhand der id und gibt true zurück, falls das Event erfolgreich entfernt wurde.
 
 
+**3. Unterstützung von DateTime als Skalartyp**
+
+```
+@Bean
+public GraphQLScalarType dateTimeScalar() {
+    return ExtendedScalars.DateTime;
+}
 
 
+```
+GraphQL unterstützt DateTime nicht nativ, weshalb es über ExtendedScalars.DateTime als benutzerdefinierter Typ hinzugefügt wird. Dadurch können Zeitstempel in Abfragen und Mutations korrekt verarbeitet werden.
 
+ **Zusammenfassung**
 
-
-
-
+| **Methode** | **Typ** | **Beschreibung** |
+|------------|---------|-----------------|
+| `event(id)` | Query | Ruft ein Event anhand der ID ab |
+| `eventsByUser(userId)` | Query | Ruft alle Events eines bestimmten Benutzers ab |
+| `eventsByDateRange(start, end)` | Query | Ruft alle Events in einem bestimmten Zeitraum ab |
+| `createEvent(...)` | Mutation | Erstellt ein neues Event |
+| `updateEvent(...)` | Mutation | Aktualisiert ein bestehendes Event |
+| `deleteEvent(id)` | Mutation | Löscht ein Event |
+| `dateTimeScalar()` | Bean | Fügt `DateTime` als benutzerdefinierten Skalartyp hinzu |
