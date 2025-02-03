@@ -338,7 +338,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Prioritäts-Farben */
+/* Prioritäts-Farben für events */
 .color-dot.priority-high { 
     background-color: #dc3545; 
 }
@@ -348,7 +348,7 @@ body {
 .color-dot.priority-low { 
     background-color: #28a745; 
 }
-
+/*Event item styling*/
 .event-item {
     position: absolute;
     left: 4px;
@@ -391,7 +391,7 @@ body {
     color: white;
 }
 
-/* Resize Handles */
+/* Resize Handles for event resizing*/
 .resize-handle {
     position: absolute;
     left: 0;
