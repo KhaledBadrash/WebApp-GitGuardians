@@ -93,6 +93,10 @@ class UserController {
             linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel());
     }
 
+        /**
+     * Benutzer aktualisieren
+     * Aktualisiert einen vorhandenen Benutzer mit neuen Daten.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User newUser) {
         User user = users.get(id);
@@ -110,6 +114,10 @@ class UserController {
         return ResponseEntity.ok(resource);
     }
 
+    /**
+     * Benutzer löschen
+     * Entfernt einen Benutzer anhand der ID.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         if (!users.containsKey(id)) {
@@ -120,18 +128,26 @@ class UserController {
     }
 }
 
+/**
+ * Benutzer-Datenklasse
+ * Repräsentiert die Benutzerdaten mit ID, E-Mail, Name und Passwort.
+ */
 @Data
 class User {
     private String id;
     private String email;
     private String name;
     private String password;
-
 }
 
+/**
+ * Benutzer nicht gefunden Ausnahme
+ * Wird geworfen, wenn ein Benutzer mit einer bestimmten ID nicht existiert.
+ */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String id) {
         super("Could not find user " + id);
     }
 }
+
