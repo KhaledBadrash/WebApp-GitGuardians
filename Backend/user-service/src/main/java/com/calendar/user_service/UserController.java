@@ -53,6 +53,10 @@ class UserController {
             .add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")));
     }
 
+       /**
+     * Registrierungsmethode
+     * Fügt einen neuen Benutzer hinzu, wenn die E-Mail noch nicht registriert wurde.
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         boolean emailExists = users.values().stream()
@@ -62,6 +66,7 @@ class UserController {
             return ResponseEntity.badRequest().body("Email bereits registriert");
         }
 
+        // Benutzer ID generieren und speichern
         user.setId(UUID.randomUUID().toString());
         users.put(user.getId(), user);
 
@@ -69,6 +74,10 @@ class UserController {
             linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel()));
     }
 
+    /**
+     * Benutzer abrufen
+     * Gibt einen Benutzer anhand der ID zurück.
+     */
     @GetMapping("/{id}")
     public EntityModel<User> getUser(@PathVariable String id) {
         User user = users.get(id);
@@ -82,6 +91,10 @@ class UserController {
         );
     }
 
+    /**
+     * Alle Benutzer abrufen
+     * Gibt eine Liste aller gespeicherten Benutzer zurück.
+     */
     @GetMapping
     public CollectionModel<EntityModel<User>> getAllUsers() {
         List<EntityModel<User>> userEntities = users.values().stream()
@@ -92,6 +105,8 @@ class UserController {
         return CollectionModel.of(userEntities,
             linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel());
     }
+
+
 
         /**
      * Benutzer aktualisieren
