@@ -215,7 +215,7 @@ body {
     );
     pointer-events: none;
 }
-
+/* Styling for time slots and day headers*/
 .time-slot {
     height: 60px;
     padding: 0 8px;
@@ -236,7 +236,7 @@ body {
     z-index: 1;
 }
 
-/* Heute-Markierung */
+/* Highlight for today */
 .day-header.today {
     background-color: var(--primary-blue);
     color: white;
