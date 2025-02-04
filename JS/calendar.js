@@ -15,36 +15,36 @@ class ModernCalendar {
     }
 
     initializeElements() {
-        // Grundlegende Elemente
+        // Basic elements
         this.calendarGrid = document.querySelector('.days-grid');
         this.timeColumn = document.querySelector('.time-column');
         this.currentDateDisplay = document.querySelector('.current-date');
         
-        // Modal Elemente
+        // Modal elements
         this.eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
         this.eventTitleInput = document.querySelector('.event-title-input');
         this.eventStartInput = document.getElementById('eventStart');
         this.eventEndInput = document.getElementById('eventEnd');
         
-        // Stats Elemente
+        // Stats elements
         this.todayEventsCount = document.getElementById('todayEvents');
         this.weekEventsCount = document.getElementById('weekEvents');
         this.totalEventsCount = document.getElementById('totalEvents');
     }
     initializeEventListeners() {
-        // Navigation Listeners
+        // Navigation listeners
         document.querySelector('.today-btn').addEventListener('click', () => this.goToToday());
         document.querySelector('.nav-arrows').children[0].addEventListener('click', () => this.changeWeek(-1));
         document.querySelector('.nav-arrows').children[1].addEventListener('click', () => this.changeWeek(1));
         
-        // Event Creation Listeners
+        // Event creation listeners
         document.querySelector('.create-event-btn').addEventListener('click', () => this.openNewEventModal());
         document.querySelector('.save-event').addEventListener('click', () => this.saveEvent());
         
-        // View Change Listener
+        // View change listener
         document.querySelector('.view-selector').addEventListener('change', (e) => this.changeView(e.target.value));
         
-        // Kategorie-Filter Listener
+        // Category filter listener
         document.querySelectorAll('.calendars-list input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 this.render();
@@ -53,7 +53,7 @@ class ModernCalendar {
     }
 
     openNewEventModal() {
-        // Setze Standardwerte für das neue Event
+        // Set default values for the new event
         const now = new Date();
         const oneHourLater = new Date(now.getTime() + (60 * 60 * 1000));
         
@@ -61,15 +61,15 @@ class ModernCalendar {
         this.eventStartInput.value = this.formatDateTimeForInput(now);
         this.eventEndInput.value = this.formatDateTimeForInput(oneHourLater);
         
-        // Aktualisiere die Kategorie-Auswahl
+        // Update category selection
         const categorySelect = document.querySelector('select[name="priority"]');
         categorySelect.innerHTML = `
             <optgroup label="Standard">
-                <option value="high">Wichtig</option>
+                <option value="high">Important</option>
                 <option value="medium" selected>Standard</option>
                 <option value="low">Optional</option>
             </optgroup>
-            <optgroup label="Benutzerdefiniert">
+            <optgroup label="Custom">
                 ${this.customCategories.map(cat => 
                     <option value="${cat.id}">${cat.name}</option>
                 ).join('')}
@@ -92,11 +92,11 @@ class ModernCalendar {
         if (categorySelect) {
             categorySelect.innerHTML = `
                 <optgroup label="Standard">
-                    <option value="high">Wichtig</option>
+                    <option value="high">Important</option>
                     <option value="medium" selected>Standard</option>
                     <option value="low">Optional</option>
                 </optgroup>
-                <optgroup label="Benutzerdefiniert">
+                <optgroup label="Custom">
                     ${this.customCategories.map(cat => 
                         `<option value="${cat.id}">${cat.name}</option>`
                     ).join('')}
@@ -119,7 +119,7 @@ class ModernCalendar {
 }
 
     async editEvent(event) {
-        document.querySelector('#eventModal .modal-title').textContent = 'Termin bearbeiten';
+        document.querySelector('#eventModal .modal-title').textContent = 'Edit Event';
         
         this.eventTitleInput.value = event.title;
         this.eventStartInput.value = this.formatDateTimeForInput(new Date(event.start));
@@ -130,19 +130,19 @@ class ModernCalendar {
             prioritySelect.value = event.priority;
         }
         
-        // Speichere die Event-ID für das Update
+        // Store the event ID for updating
         this.editingEventId = event.id;
         
-        // Lösch-Button hinzufügen
+        // Add delete button
         const modalFooter = document.querySelector('.modal-footer');
         if (modalFooter) {
-            // Entferne vorhandene Lösch-Buttons
+            // Remove existing delete buttons
             modalFooter.querySelectorAll('.btn-danger').forEach(btn => btn.remove());
             
-            // Füge neuen Lösch-Button hinzu
+            // Add new delete button
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'btn btn-danger';
-            deleteBtn.textContent = 'Löschen';
+            deleteBtn.textContent = 'Delete';
             deleteBtn.onclick = () => this.deleteEvent(event);
             
             modalFooter.insertBefore(deleteBtn, modalFooter.firstChild);
@@ -150,6 +150,7 @@ class ModernCalendar {
         
         this.eventModal.show();
     }
+
 
     async deleteEvent(event) {
 //TO BE DONE       
