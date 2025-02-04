@@ -61,22 +61,30 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Category>> createCategory(@RequestBody Category category) {
-        return saveCategory(category, null); // Falls keine ID vorhanden ist -> neue Kategorie erstellen
+        return saveCategory(category, null); // If no ID is available -> create new category
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<Category>> updateCategory(@PathVariable int id, @RequestBody Category category) {
-        return saveCategory(category, id); // Falls ID vorhanden -> Update
+        return saveCategory(category, id); // If ID available -> Update
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
-        if (!categories.containsKey(id)) {
-            throw new CategoryNotFoundException(id);
-        }
-        categories.remove(id);
-        return ResponseEntity.noContent().build();
+public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
+    // Überprüft, ob die Kategorie mit der angegebenen ID existiert
+    if (!categories.containsKey(id)) {
+        // Falls die Kategorie nicht gefunden wird, wird eine benutzerdefinierte Exception geworfen
+        throw new CategoryNotFoundException(id);
     }
+
+    // Entfernt die Kategorie aus der Map
+    categories.remove(id);
+
+    // Gibt eine HTTP 204 No Content-Antwort zurück, was bedeutet, dass die Anfrage erfolgreich war,
+    // aber keine Inhalte zurückgegeben werden müssen
+    return ResponseEntity.noContent().build();
+}
+
 
     /**
      * *Gemeinsame Methode zum Erstellen und Aktualisieren einer Kategorie*
