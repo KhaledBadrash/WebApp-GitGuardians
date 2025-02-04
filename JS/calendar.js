@@ -195,7 +195,7 @@ class ModernCalendar {
 
             todoList.appendChild(todoItem);
         });
-    }
+    } 
 
     // Category Handling
     async saveCategory() {
@@ -333,220 +333,218 @@ class ModernCalendar {
                 }
             });
         }
+    } 
+    // Add Drag & Drop handler
+column.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    column.classList.add('drag-over');
+});
+
+column.addEventListener('dragleave', () => {
+    column.classList.remove('drag-over');
+});
+
+column.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    column.classList.remove('drag-over');
+
+    const eventData = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const rect = column.getBoundingClientRect();
+    const mouseY = e.clientY - rect.top + column.scrollTop;
+    const minutes = Math.floor(mouseY);
+
+    // Move event
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const newDate = new Date(date);
+    newDate.setHours(hours, mins, 0, 0);
+    
+    const duration = new Date(eventData.end) - new Date(eventData.start);
+    const endDate = new Date(newDate.getTime() + duration);
+    
+    // TBD
+        
+        this.loadInitialData();
+    } catch (error) {
+        console.error('Error moving event:', error);
+        alert('Error moving the appointment');
     }
+});
+
+return column;
+}
+
+createEventElement(event) {
+    const eventElement = document.createElement('div');
+    eventElement.className = 'event-item';
+    eventElement.setAttribute('data-event-id', event.id);
     
-        // Drag & Drop Handler hinzufügen
-        column.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            column.classList.add('drag-over');
-        });
+    // Position and style
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end);
+    const startMinutes = startDate.getHours() * 60 + startDate.getMinutes();
+    const duration = (endDate - startDate) / (1000 * 60); // Duration in minutes
+
+    eventElement.style.top = ${startMinutes}px;
+    eventElement.style.height = ${duration}px;
+
+    // Add priority style
+    eventElement.classList.add(priority-${event.priority});
+
+    // Event content
+    eventElement.innerHTML = `
+        <div class="event-time">${this.formatTime(startDate)} - ${this.formatTime(endDate)}</div>
+        <div class="event-title">${event.title}</div>
+        <div class="resize-handle top"></div>
+        <div class="resize-handle bottom"></div>
+    `;
+
+    // Event listeners
+    eventElement.draggable = true;
+    eventElement.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify(event));
+        e.target.classList.add('dragging');
+    });
+    
+    eventElement.addEventListener('dragend', (e) => {
+        e.target.classList.remove('dragging');
+    });
+
+    eventElement.addEventListener('click', () => this.editEvent(event));
+
+    // Resize handles
+    this.addResizeHandlers(eventElement, event);
+
+    return eventElement;
+}
+
+addResizeHandlers(element, event) {
+    const handles = {
+        top: element.querySelector('.resize-handle.top'),
+        bottom: element.querySelector('.resize-handle.bottom')
+    };
+
+    if (!handles.top || !handles.bottom) return;
+
+    const handleResize = (e, handle) => {
+        e.stopPropagation();
         
-        column.addEventListener('dragleave', () => {
-            column.classList.remove('drag-over');
-        });
-        
-        column.addEventListener('drop', async (e) => {
-            e.preventDefault();
-            column.classList.remove('drag-over');
-    
-            const eventData = JSON.parse(e.dataTransfer.getData('text/plain'));
-            const rect = column.getBoundingClientRect();
-            const mouseY = e.clientY - rect.top + column.scrollTop;
-            const minutes = Math.floor(mouseY);
-    
-            // Event verschieben
-            const hours = Math.floor(minutes / 60);
-            const mins = minutes % 60;
-            const newDate = new Date(date);
-            newDate.setHours(hours, mins, 0, 0);
+        const startY = e.clientY;
+        const startTop = parseInt(element.style.top) || 0;
+        const startHeight = element.offsetHeight;
+
+        const move = (moveEvent) => {
+            const diff = moveEvent.clientY - startY;
             
-            const duration = new Date(eventData.end) - new Date(eventData.start);
-            const endDate = new Date(newDate.getTime() + duration);
+            if (handle === 'top') {
+                const newTop = startTop + diff;
+                const newHeight = startHeight - diff;
+                
+                if (newHeight >= 20 && newTop >= 0) {
+                    element.style.top = ${newTop}px;
+                    element.style.height = ${newHeight}px;
+                }
+            } else {
+                const newHeight = startHeight + diff;
+                if (newHeight >= 20) {
+                    element.style.height = ${newHeight}px;
+                }
+            }
+        };
+
+        const stop = async () => {
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', stop);
             
-            //TBD
+            const newTop = parseInt(element.style.top);
+            const newHeight = element.offsetHeight;
+            
+            const startDate = new Date(event.start);
+            const startHour = Math.floor(newTop / 60);
+            const startMin = newTop % 60;
+            
+            startDate.setHours(startHour, startMin, 0, 0);
+            const endDate = new Date(startDate.getTime() + newHeight * 60000);
+
+            // TBD
                 
                 this.loadInitialData();
             } catch (error) {
-                console.error('Error moving event:', error);
-                alert('Fehler beim Verschieben des Termins');
+                console.error('Error resizing event:', error);
+                alert('Error changing the appointment size');
             }
-        });
+        };
+
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', stop);
+    };
+
+    handles.top.addEventListener('mousedown', (e) => handleResize(e, 'top'));
+    handles.bottom.addEventListener('mousedown', (e) => handleResize(e, 'bottom'));
+}
+
+// Utility functions
+formatDateTimeForInput(date) {
+    return date.toISOString().slice(0, 16);
+}
+
+formatDate(date) {
+    return date.toLocaleDateString('sv').split('T')[0];
+}
+
+formatDayHeader(date) {
+    return date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
+}
+
+formatMonthYear(date) {
+    return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+}
+
+formatTime(date) {
+    return date.toLocaleTimeString('de-DE', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+}
+
+isToday(date) {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+}
+
+getStartOfWeek(date) {
+    const start = new Date(date);
+    start.setDate(start.getDate() - start.getDay());
+    start.setHours(0, 0, 0, 0);
+    return start;
+}
+
+scrollToCurrentTime() {
+    const now = new Date();
+    const hourHeight = 60;
+    const scrollPosition = (now.getHours() + now.getMinutes() / 60) * hourHeight;
     
-        return column;
-    }
-
-    createEventElement(event) {
-        const eventElement = document.createElement('div');
-        eventElement.className = 'event-item';
-        eventElement.setAttribute('data-event-id', event.id);
-        
-        // Position und Style
-        const startDate = new Date(event.start);
-        const endDate = new Date(event.end);
-        const startMinutes = startDate.getHours() * 60 + startDate.getMinutes();
-        const duration = (endDate - startDate) / (1000 * 60); // Dauer in Minuten
-
-        eventElement.style.top = ${startMinutes}px;
-        eventElement.style.height = ${duration}px;
-
-        // Füge Prioritäts-Stil hinzu
-        eventElement.classList.add(priority-${event.priority});
-
-        // Event Inhalt
-        eventElement.innerHTML = `
-            <div class="event-time">${this.formatTime(startDate)} - ${this.formatTime(endDate)}</div>
-            <div class="event-title">${event.title}</div>
-            <div class="resize-handle top"></div>
-            <div class="resize-handle bottom"></div>
-        `;
-
-        // Event Listener
-        eventElement.draggable = true;
-        eventElement.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', JSON.stringify(event));
-            e.target.classList.add('dragging');
-        });
-        
-        eventElement.addEventListener('dragend', (e) => {
-            e.target.classList.remove('dragging');
-        });
-
-        eventElement.addEventListener('click', () => this.editEvent(event));
-
-        // Resize Handles
-        this.addResizeHandlers(eventElement, event);
-
-        return eventElement;
-    }
-
-    addResizeHandlers(element, event) {
-        const handles = {
-            top: element.querySelector('.resize-handle.top'),
-            bottom: element.querySelector('.resize-handle.bottom')
-        };
-
-        if (!handles.top || !handles.bottom) return;
-
-        const handleResize = (e, handle) => {
-            e.stopPropagation();
-            
-            const startY = e.clientY;
-            const startTop = parseInt(element.style.top) || 0;
-            const startHeight = element.offsetHeight;
-
-            const move = (moveEvent) => {
-                const diff = moveEvent.clientY - startY;
-                
-                if (handle === 'top') {
-                    const newTop = startTop + diff;
-                    const newHeight = startHeight - diff;
-                    
-                    if (newHeight >= 20 && newTop >= 0) {
-                        element.style.top = ${newTop}px;
-                        element.style.height = ${newHeight}px;
-                    }
-                } else {
-                    const newHeight = startHeight + diff;
-                    if (newHeight >= 20) {
-                        element.style.height = ${newHeight}px;
-                    }
-                }
-            };
-
-            const stop = async () => {
-                document.removeEventListener('mousemove', move);
-                document.removeEventListener('mouseup', stop);
-                
-                const newTop = parseInt(element.style.top);
-                const newHeight = element.offsetHeight;
-                
-                const startDate = new Date(event.start);
-                const startHour = Math.floor(newTop / 60);
-                const startMin = newTop % 60;
-                
-                startDate.setHours(startHour, startMin, 0, 0);
-                const endDate = new Date(startDate.getTime() + newHeight * 60000);
-
-                //TBD
-                    
-                    this.loadInitialData();
-                } catch (error) {
-                    console.error('Error resizing event:', error);
-                    alert('Fehler beim Ändern der Termingröße');
-                }
-            };
-
-            document.addEventListener('mousemove', move);
-            document.addEventListener('mouseup', stop);
-        };
-
-        handles.top.addEventListener('mousedown', (e) => handleResize(e, 'top'));
-        handles.bottom.addEventListener('mousedown', (e) => handleResize(e, 'bottom'));
-    }
-
-    // Hilfsfunktionen
-    formatDateTimeForInput(date) {
-        return date.toISOString().slice(0, 16);
-    }
-
-    formatDate(date) {
-        return date.toLocaleDateString('sv').split('T')[0];
-    }
-
-    formatDayHeader(date) {
-        return date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
-    }
-
-    formatMonthYear(date) {
-        return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
-    }
-
-    formatTime(date) {
-        return date.toLocaleTimeString('de-DE', { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        });
-    }
-
-    isToday(date) {
-        const today = new Date();
-        return date.toDateString() === today.toDateString();
-    }
-
-    getStartOfWeek(date) {
-        const start = new Date(date);
-        start.setDate(start.getDate() - start.getDay());
-        start.setHours(0, 0, 0, 0);
-        return start;
-    }
-
-    scrollToCurrentTime() {
-        const now = new Date();
-        const hourHeight = 60;
-        const scrollPosition = (now.getHours() + now.getMinutes() / 60) * hourHeight;
-        
-        const calendarGrid = document.querySelector('.calendar-grid');
-        if (calendarGrid) {
-            calendarGrid.scrollTop = scrollPosition - (calendarGrid.clientHeight / 3);
-        }
-    }
-
-    // Navigation
-    goToToday() {
-        this.currentDate = new Date();
-        this.render();
-    }
-
-    changeWeek(offset) {
-        this.currentDate.setDate(this.currentDate.getDate() + (offset * 7));
-        this.render();
+    const calendarGrid = document.querySelector('.calendar-grid');
+    if (calendarGrid) {
+        calendarGrid.scrollTop = scrollPosition - (calendarGrid.clientHeight / 3);
     }
 }
 
-// Initialisierung
+// Navigation
+goToToday() {
+    this.currentDate = new Date();
+    this.render();
+}
+
+changeWeek(offset) {
+    this.currentDate.setDate(this.currentDate.getDate() + (offset * 7));
+    this.render();
+}
+
+// Initialization
 document.addEventListener('DOMContentLoaded', () => {
     window.calendar = new TerminCalender();
 });
-    
+
     
     
