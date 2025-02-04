@@ -233,11 +233,42 @@ Die API folgt den **REST-Prinzipien**, wodurch jede Ressource über eine **einde
 
 ```
 ╔═════════════╤════════════════════════════════════════════════╗
-║ Methode     │ Bedeutung                                       ║
+║ Methode     │ Bedeutung                                      ║
 ╠═════════════╪════════════════════════════════════════════════╣
-║ 🟢 GET      │ Ruft eine oder mehrere Aufgaben (Todos) ab      ║
-║ 🟡 POST     │ Erstellt ein neues Todo                         ║
-║ 🔵 PATCH    │ Aktualisiert ein vorhandenes Todo, z. B. Status ║
-║ 🔴 DELETE   │ Entfernt ein Todo aus der Liste                 ║
+║ 🟢 GET      │ Ruft eine oder mehrere Aufgaben (Todos) ab     ║
+║ 🟡 POST     │ Erstellt ein neues Todo                        ║
+║ 🔵 PATCH    │ Aktualisiert ein vorhandenes Todo, z. B. Status║
+║ 🔴 DELETE   │ Entfernt ein Todo aus der Liste                ║
 ╚═════════════╧════════════════════════════════════════════════╝
 ```
+
+### Fehlerbehandlung und Exceptions
+
+Die API verwendet eine zentrale Fehlerbehandlung, um strukturierte und verständliche Fehlermeldungen zurückzugeben.
+
+**Beispiel: TodoNotFoundException**
+```
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class TodoNotFoundException extends RuntimeException {
+    public TodoNotFoundException(String id) {
+        super("Could not find todo " + id);
+```
+-Diese Exception wird ausgelöst, wenn ein Todo mit der angegebenen ID nicht existiert.
+-Die Annotation @ResponseStatus(HttpStatus.NOT_FOUND) sorgt dafür, dass der Client eine 404 Not Found-Antwort erhält.
+
+**Beispiel: Zentrale Fehlerbehandlung**
+```
+@ExceptionHandler(TodoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleTodoNotFound(TodoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+```
+Erklärung:
+
+-Diese Methode fängt die TodoNotFoundException global ab.
+
+-Statt eines generischen Serverfehlers erhält der Client eine benutzerfreundliche Fehlermeldung.
+
+-Diese Struktur stellt sicher, dass die API verständliche und standardisierte Fehlerantworten liefert.
