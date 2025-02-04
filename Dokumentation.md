@@ -253,7 +253,10 @@ class TodoNotFoundException extends RuntimeException {
     public TodoNotFoundException(String id) {
         super("Could not find todo " + id);
 ```
+Erklärung:
+
 -Diese Exception wird ausgelöst, wenn ein Todo mit der angegebenen ID nicht existiert.
+
 -Die Annotation @ResponseStatus(HttpStatus.NOT_FOUND) sorgt dafür, dass der Client eine 404 Not Found-Antwort erhält.
 
 **Beispiel: Zentrale Fehlerbehandlung**
