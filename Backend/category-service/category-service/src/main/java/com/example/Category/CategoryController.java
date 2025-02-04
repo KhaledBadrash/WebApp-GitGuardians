@@ -53,7 +53,7 @@ public class CategoryController {
                 // Collecting the EntityModels in a list
                 .collect(Collectors.toList());
 
-        // Creates a CollectionModel that contains the filtered categories and 
+        // Creates a CollectionModel that contains the filtered categories and
         // adds a self-link
         return CollectionModel.of(categoryEntities,
                 linkTo(methodOn(CategoryController.class).getAllCategories(userId)).withSelfRel());
@@ -70,21 +70,21 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
-    // Überprüft, ob die Kategorie mit der angegebenen ID existiert
-    if (!categories.containsKey(id)) {
-        // Falls die Kategorie nicht gefunden wird, wird eine benutzerdefinierte Exception geworfen
-        throw new CategoryNotFoundException(id);
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
+        // Checks if the category with the given ID exists
+        if (!categories.containsKey(id)) {
+            // If the category is not found, a custom exception is thrown
+            throw new CategoryNotFoundException(id);
+        }
+
+        // Removes the category from the map
+        categories.remove(id);
+
+        // Returns an HTTP 204 No Content response,
+        // which means that the request was successful but no content needs to be
+        // returned
+        return ResponseEntity.noContent().build();
     }
-
-    // Entfernt die Kategorie aus der Map
-    categories.remove(id);
-
-    // Gibt eine HTTP 204 No Content-Antwort zurück, was bedeutet, dass die Anfrage erfolgreich war,
-    // aber keine Inhalte zurückgegeben werden müssen
-    return ResponseEntity.noContent().build();
-}
-
 
     /**
      * *Gemeinsame Methode zum Erstellen und Aktualisieren einer Kategorie*
