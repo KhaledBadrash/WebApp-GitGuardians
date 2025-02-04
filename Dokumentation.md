@@ -215,3 +215,29 @@ Die Datenhaltung erfolgt temporär in einem In-Memory-Speicher, wodurch die API 
 
 Die API stellt wesentliche CRUD-Funktionalitäten bereit, darunter das Anlegen, Abrufen, Bearbeiten und Löschen von Todos. Zudem bietet sie eine Funktion zur Statusänderung, mit der Aufgaben als erledigt oder offen markiert werden können. Die Einbettung von Navigationslinks erleichtert die Interaktion mit der API und verbessert die Benutzerfreundlichkeit für Clients erheblich.
 
+## Technologie-Stack
+
+Eine kurze Übersicht über die verwendeten Technologien:
+
+- **Programmiersprache**: Java  
+- **Framework**: Spring Boot  
+- **Datenhaltung**: In-Memory (ConcurrentHashMap)  
+- **Datenformat**: JSON  
+
+
+## Funktionsweise der Rest API
+
+Der **Todo-Service** basiert auf einer klassischen **Client-Server-Architektur**. Das bedeutet, dass verschiedene Clients, mit dem Server über **HTTP-Anfragen** kommunizieren, um Todos zu **erstellen**, **abzurufen**, **zu aktualisieren** oder **zu löschen**.
+
+Die API folgt den **REST-Prinzipien**, wodurch jede Ressource über eine **eindeutige URL** erreichbar ist. Die Kommunikation erfolgt über die gängigen **HTTP-Methoden**:
+
+```
+╔═════════════╤════════════════════════════════════════════════╗
+║ Methode     │ Bedeutung                                       ║
+╠═════════════╪════════════════════════════════════════════════╣
+║ 🟢 GET      │ Ruft eine oder mehrere Aufgaben (Todos) ab      ║
+║ 🟡 POST     │ Erstellt ein neues Todo                         ║
+║ 🔵 PATCH    │ Aktualisiert ein vorhandenes Todo, z. B. Status ║
+║ 🔴 DELETE   │ Entfernt ein Todo aus der Liste                 ║
+╚═════════════╧════════════════════════════════════════════════╝
+```
