@@ -203,3 +203,15 @@ GraphQL unterstützt DateTime nicht nativ, weshalb es über ExtendedScalars.Date
 | `updateEvent(...)` | Mutation | Aktualisiert ein bestehendes Event |
 | `deleteEvent(id)` | Mutation | Löscht ein Event |
 | `dateTimeScalar()` | Bean | Fügt `DateTime` als benutzerdefinierten Skalartyp hinzu |
+
+
+## REST API Todo-Service
+
+### Einführung
+
+Der Todo-Service ist eine moderne REST-API, die eine einfache und dennoch effektive Verwaltung von Aufgaben (Todos) ermöglicht. Sie wurde entwickelt, um Nutzern eine komfortable Möglichkeit zu bieten, ihre Todos zu erfassen, zu organisieren und bei Bedarf zu aktualisieren. Durch den Einsatz von Spring Boot und einer hypermedialen Architektur (HATEOAS) folgt die API gängigen REST-Prinzipien und sorgt für eine intuitive Bedienbarkeit.
+
+Die Datenhaltung erfolgt temporär in einem In-Memory-Speicher, wodurch die API besonders für Entwicklungs- und Testzwecke geeignet ist. In einem produktiven Einsatzszenario wäre eine Verbindung zu einer persistenten Datenbank erforderlich, um langfristige Speicherung und Skalierbarkeit zu gewährleisten.
+
+Die API stellt wesentliche CRUD-Funktionalitäten bereit, darunter das Anlegen, Abrufen, Bearbeiten und Löschen von Todos. Zudem bietet sie eine Funktion zur Statusänderung, mit der Aufgaben als erledigt oder offen markiert werden können. Die Einbettung von Navigationslinks erleichtert die Interaktion mit der API und verbessert die Benutzerfreundlichkeit für Clients erheblich.
+
