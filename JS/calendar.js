@@ -151,22 +151,21 @@ class ModernCalendar {
         this.eventModal.show();
     }
 
-
     async deleteEvent(event) {
-//TO BE DONE       
+        // TO BE DONE       
     }
 
     // Todo Handling
     async addTodo() {
-//TO BE DONE
+        // TO BE DONE
     }
 
     async toggleTodo(id) {
-//TO BE DONE 
+        // TO BE DONE 
     }
 
     async deleteTodo(id) {
-       //TO BE DONE
+        // TO BE DONE
     }
 
     renderTodos() {
@@ -198,7 +197,7 @@ class ModernCalendar {
         });
     }
 
-    // Kategorie Handling
+    // Category Handling
     async saveCategory() {
         const nameInput = document.getElementById('categoryName');
         const colorInput = document.getElementById('categoryColor');
@@ -207,7 +206,7 @@ class ModernCalendar {
         const color = colorInput?.value;
 
         if (!name) {
-            alert('Bitte geben Sie einen Namen ein');
+            alert('Please enter a name');
             return;
         }
 
@@ -215,16 +214,16 @@ class ModernCalendar {
             // TO BE DONE
         } catch (error) {
             console.error('Error creating category:', error);
-            alert('Fehler beim Erstellen der Kategorie');
+            alert('Error creating category');
         }
     }
 
     async deleteCategory(categoryId) {
         try {
-            //TO BE DONE
+            // TO BE DONE
         } catch (error) {
             console.error('Error deleting category:', error);
-            alert('Fehler beim Löschen der Kategorie');
+            alert('Error deleting category');
         }
     }
 
@@ -232,10 +231,10 @@ class ModernCalendar {
         const categoriesList = document.getElementById('categoriesList');
         if (!categoriesList) return;
 
-        // Entferne alte benutzerdefinierte Kategorien
+        // Remove old custom categories
         categoriesList.querySelectorAll('.custom-category').forEach(el => el.remove());
         
-        // Füge benutzerdefinierte Kategorien hinzu
+        // Add custom categories
         this.customCategories.forEach(category => {
             const li = document.createElement('li');
             li.className = 'custom-category';
@@ -246,14 +245,14 @@ class ModernCalendar {
                     <span>${category.name}</span>
                 </label>
                 <button class="delete-category-btn" data-category-id="${category.id}">
-                    Löschen
+                    Delete
                 </button>
             `;
             
             const deleteBtn = li.querySelector('.delete-category-btn');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', () => {
-                    if (confirm('Möchten Sie diese Kategorie wirklich löschen?')) {
+                    if (confirm('Do you really want to delete this category?')) {
                         this.deleteCategory(category.id);
                     }
                 });
@@ -267,6 +266,7 @@ class ModernCalendar {
             categoriesList.appendChild(li);
         });
     }
+
     // Calendar Grid Rendering
     render() {
         this.renderTimeColumn();
@@ -290,7 +290,7 @@ class ModernCalendar {
         for (let hour = 0; hour < 24; hour++) {
             const timeSlot = document.createElement('div');
             timeSlot.className = 'time-slot';
-            timeSlot.textContent = ${hour.toString().padStart(2, '0')}:00;
+            timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
             timeSlot.setAttribute('data-hour', hour);
             this.timeColumn.appendChild(timeSlot);
         }
@@ -333,6 +333,7 @@ class ModernCalendar {
                 }
             });
         }
+    }
     
         // Drag & Drop Handler hinzufügen
         column.addEventListener('dragover', (e) => {
