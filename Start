@@ -1,0 +1,29 @@
+Starten der einzelnen Microservices:
+
+Event-Service (Port 8081)
+cd Backend/event-service    
+>> ./mvnw spring-boot:run
+
+User-Service (Port 8082)
+cd Backend/user-service 
+>> ./mvnw spring-boot:run
+
+Todo-Service (Port 8083)
+cd Backend/todo-service 
+>> ./mvnw spring-boot:run
+
+Category-Service (Port 8084)
+cd Backend/category-service/category-service
+>> ./mvnw spring-boot:run
+
+Starten des API-Gateways:
+
+API-Gateway (Port 8080)
+cd Backend/api-gateway  
+>> ./mvnw spring-boot:run
+
+Starten des Frontends:
+
+Clean:
+./mvnw clean
+

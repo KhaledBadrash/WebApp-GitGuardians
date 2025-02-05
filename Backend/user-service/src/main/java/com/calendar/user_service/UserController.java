@@ -17,7 +17,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 // Diese Klasse ist ein Spring REST-Controller, der Benutzerverwaltung implementiert
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5501", allowCredentials = "true")
+// Änderung: statt "*" wird jetzt der konkrete Origin angegeben. --> @CrossOrigin(origins = "*", allowCredentials = "true")
+
 class UserController {
     
     // Eine thread-sichere Map zur Speicherung von Benutzerdaten
