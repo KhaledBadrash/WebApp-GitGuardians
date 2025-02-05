@@ -12,3 +12,7 @@ Todo-Service (Port 8083)
 cd Backend/todo-service 
 >> ./mvnw spring-boot:run
 
+Category-Service (Port 8084)
+cd Backend/category-service/category-service
+>> ./mvnw spring-boot:run
+
