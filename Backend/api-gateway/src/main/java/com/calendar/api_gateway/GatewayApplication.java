@@ -32,14 +32,15 @@ public class GatewayApplication {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        // CORS-Konfiguration für Entwicklungszwecke
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:5500");
+        config.addAllowedOrigin("http://127.0.0.1:5500");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-
+        config.setAllowCredentials(true);
+    
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
+    
         return new CorsWebFilter(source);
     }
 }

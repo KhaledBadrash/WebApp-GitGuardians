@@ -43,10 +43,12 @@ registerForm.addEventListener('submit', async (e) => {
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
-        
-        const response = await api.users.register(email, password, name);
+
+        const user = { name, email, password }; // Erstelle ein User-Objekt
+
+        const response = await api.users.register(user); // Übergib das User-Objekt
         currentUser = response;
-        
+
         registerForm.reset();
         showApp();
         initializeCalendar();

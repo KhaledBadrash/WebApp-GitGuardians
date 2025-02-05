@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,9 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 // Diese Klasse ist ein Spring REST-Controller, der Benutzerverwaltung implementiert
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5501", allowCredentials = "true")
-// Änderung: statt "*" wird jetzt der konkrete Origin angegeben. --> @CrossOrigin(origins = "*", allowCredentials = "true")
-
 class UserController {
     
     // Eine thread-sichere Map zur Speicherung von Benutzerdaten
@@ -70,17 +68,31 @@ class UserController {
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
+        if (user.getEmail() == null || user.getName() == null || user.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Alle Felder (Email, Name, Passwort) müssen ausgefüllt sein");
+        }
+    
         boolean emailExists = users.values().stream()
             .anyMatch(u -> u.getEmail().equals(user.getEmail()));
-
+    
         if (emailExists) {
             return ResponseEntity.badRequest().body("Email bereits registriert");
         }
-
+    
         // Benutzer ID generieren und speichern
         user.setId(UUID.randomUUID().toString());
         users.put(user.getId(), user);
 
+        if (user.getEmail() == null || user.getName() == null || user.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap("message", "Alle Felder (Email, Name, Passwort) müssen ausgefüllt sein"));
+        }
+
+        if (emailExists) {
+            return ResponseEntity.badRequest()
+                .body(Collections.singletonMap("message", "Email bereits registriert"));
+        }
+    
         return ResponseEntity.ok(EntityModel.of(user,
             linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel()));
     }

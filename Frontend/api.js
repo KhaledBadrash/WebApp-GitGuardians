@@ -253,28 +253,35 @@ class UserService {
     }
 
     // Registrierungsmethode
-    static async register(email, password, name) {
+        // Registrierungsmethode
+    static async register(user) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, name }), // Sende Registrierungsdaten
+                body: JSON.stringify(user)
             });
-
+        
             if (!response.ok) {
-                throw new Error('Registrierung fehlgeschlagen');
+                // Versuch, die Antwort als JSON zu parsen
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (jsonError) {
+                    // Falls das fehlschlägt, den Text extrahieren
+                    errorData = { message: await response.text() };
+                }
+                throw new Error(errorData.message || 'Registrierung fehlgeschlagen');
             }
-
-            const user = await response.json();
-
-            // Rückgabe der Benutzerdaten
-            return user;
+        
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error('Registrierungsfehler:', error);
-            throw error;
+            handleError(error);
         }
     }
-
+        
     // Benutzerinformationen abrufen
     static async getUser(userId) {
         try {
