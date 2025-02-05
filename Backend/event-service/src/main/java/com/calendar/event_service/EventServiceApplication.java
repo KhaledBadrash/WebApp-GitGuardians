@@ -15,43 +15,43 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-// Haupt-Anwendungsklasse
+// Main application class
 @SpringBootApplication
 public class EventServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventServiceApplication.class, args);
     }
 
-    // Registrierung des DateTime-Scalars
+    // Registering the DateTime scalar
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder.scalar(graphql.scalars.ExtendedScalars.DateTime);
     }
 }
 
-// Event-Modellklasse
+// Event model class
 @Data
 class Event {
-    private String id;            // Eindeutige ID des Events
-    private String title;         // Titel des Events
-    private LocalDateTime start;  // Startzeit
-    private LocalDateTime end;    // Endzeit
-    private String userId;        // ID des Benutzers, der das Event erstellt hat
-    private Priority priority;    // Priorität des Events
-    private String categoryId;    // ID der Kategorie (optional)
+    private String id;            // Unique ID of the event
+    private String title;         // Title of the event
+    private LocalDateTime start;  // Start time
+    private LocalDateTime end;    // End time
+    private String userId;        // ID of the user who created the event
+    private Priority priority;    // Priority of the event
+    private String categoryId;    // ID of the category (optional)
 }
 
-// Enum für Prioritäten
+// Enum for priorities
 enum Priority {
     HIGH, MEDIUM, LOW
 }
 
-// GraphQL-Controller für Events
+// GraphQL controller for events
 @Controller
 class EventController {
     private final Map<String, Event> events = new ConcurrentHashMap<>();
 
-    // Mutation: Neues Event erstellen
+    // Mutation: Create a new event
     @MutationMapping
     public Event createEvent(
             @Argument String title,
@@ -61,7 +61,7 @@ class EventController {
             @Argument Priority priority,
             @Argument String categoryId) {
         if (start.isAfter(end)) {
-            throw new IllegalArgumentException("Startzeit darf nicht nach der Endzeit liegen.");
+            throw new IllegalArgumentException("Start time cannot be after the end time.");
         }
 
         Event event = new Event();
@@ -75,6 +75,7 @@ class EventController {
         events.put(event.getId(), event);
         return event;
     }
+
 
     // Query: Event anhand der ID abrufen
     @QueryMapping
