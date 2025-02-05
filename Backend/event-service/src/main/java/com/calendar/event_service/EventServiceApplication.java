@@ -76,15 +76,14 @@ class EventController {
         return event;
     }
 
-
-    // Query: Event anhand der ID abrufen
+    // Query: Retrieve an event by ID
     @QueryMapping
     public Event event(@Argument String id) {
         return Optional.ofNullable(events.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
+                .orElseThrow(() -> new NoSuchElementException("Event with the specified ID was not found."));
     }
 
-    // Query: Alle Events eines bestimmten Benutzers abrufen
+    // Query: Retrieve all events for a specific user
     @QueryMapping
     public List<Event> eventsByUser(@Argument String userId) {
         return events.values().stream()
@@ -92,7 +91,7 @@ class EventController {
                 .collect(Collectors.toList());
     }
 
-    // Query: Events in einem bestimmten Zeitraum abrufen
+    // Query: Retrieve events within a specific time range
     @QueryMapping
     public List<Event> eventsByDateRange(@Argument LocalDateTime start, @Argument LocalDateTime end) {
         return events.values().stream()
@@ -100,7 +99,7 @@ class EventController {
                 .collect(Collectors.toList());
     }
 
-    // Mutation: Event aktualisieren
+    // Mutation: Update an event
     @MutationMapping
     public Event updateEvent(
             @Argument String id,
@@ -110,7 +109,7 @@ class EventController {
             @Argument Priority priority,
             @Argument String categoryId) {
         Event event = Optional.ofNullable(events.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
+                .orElseThrow(() -> new NoSuchElementException("Event with the specified ID was not found."));
 
         if (title != null) event.setTitle(title);
         if (start != null) event.setStart(start);
@@ -120,9 +119,10 @@ class EventController {
         return event;
     }
 
-    // Mutation: Event löschen
+    // Mutation: Delete an event
     @MutationMapping
     public boolean deleteEvent(@Argument String id) {
         return events.remove(id) != null;
     }
 }
+
