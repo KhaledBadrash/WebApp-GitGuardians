@@ -24,3 +24,6 @@ cd Backend/api-gateway
 
 Starten des Frontends:
 
+Clean:
+./mvnw clean
+
