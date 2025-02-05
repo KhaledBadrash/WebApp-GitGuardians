@@ -3,3 +3,9 @@ Starten der einzelnen Microservices:
 Event-Service (Port 8081)
 cd Backend/event-service    
 >> ./mvnw spring-boot:run
+
+User-Service (Port 8082)
+cd Backend/user-service 
+>> ./mvnw spring-boot:run
+
+
