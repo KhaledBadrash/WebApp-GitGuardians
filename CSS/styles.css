@@ -584,7 +584,7 @@ body {
     gap: 8px;
     margin-bottom: 12px;
 }
-
+/* Limits the height of the to-do list and enables vertical scrolling */
 .todo-list {
     max-height: 200px;
     overflow-y: auto;
@@ -599,7 +599,7 @@ body {
     border-radius: 4px;
     margin-bottom: 4px;
 }
-
+/* Reduces visibility and adds a strikethrough effect when a task is marked as completed */
 .todo-item.completed {
     opacity: 0.7;
     text-decoration: line-through;
@@ -616,7 +616,7 @@ body {
     cursor: pointer;
 } 
 
-/* Kategorie Styles */
+/* Kategory Styles */
 .category-add {
     margin-bottom: 12px;
 }
