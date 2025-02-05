@@ -16,3 +16,11 @@ Category-Service (Port 8084)
 cd Backend/category-service/category-service
 >> ./mvnw spring-boot:run
 
+Starten des API-Gateways:
+
+API-Gateway (Port 8080)
+cd Backend/api-gateway  
+>> ./mvnw spring-boot:run
+
+Starten des Frontends:
+
