@@ -15,43 +15,43 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-// Haupt-Anwendungsklasse
+// Main application class
 @SpringBootApplication
 public class EventServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventServiceApplication.class, args);
     }
 
-    // Registrierung des DateTime-Scalars
+    // Registering the DateTime scalar
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder.scalar(graphql.scalars.ExtendedScalars.DateTime);
     }
 }
 
-// Event-Modellklasse
+// Event model class
 @Data
 class Event {
-    private String id;            // Eindeutige ID des Events
-    private String title;         // Titel des Events
-    private LocalDateTime start;  // Startzeit
-    private LocalDateTime end;    // Endzeit
-    private String userId;        // ID des Benutzers, der das Event erstellt hat
-    private Priority priority;    // Priorität des Events
-    private String categoryId;    // ID der Kategorie (optional)
+    private String id;            // Unique ID of the event
+    private String title;         // Title of the event
+    private LocalDateTime start;  // Start time
+    private LocalDateTime end;    // End time
+    private String userId;        // ID of the user who created the event
+    private Priority priority;    // Priority of the event
+    private String categoryId;    // ID of the category (optional)
 }
 
-// Enum für Prioritäten
+// Enum for priorities
 enum Priority {
     HIGH, MEDIUM, LOW
 }
 
-// GraphQL-Controller für Events
+// GraphQL controller for events
 @Controller
 class EventController {
     private final Map<String, Event> events = new ConcurrentHashMap<>();
 
-    // Mutation: Neues Event erstellen
+    // Mutation: Create a new event
     @MutationMapping
     public Event createEvent(
             @Argument String title,
@@ -61,7 +61,7 @@ class EventController {
             @Argument Priority priority,
             @Argument String categoryId) {
         if (start.isAfter(end)) {
-            throw new IllegalArgumentException("Startzeit darf nicht nach der Endzeit liegen.");
+            throw new IllegalArgumentException("Start time cannot be after the end time.");
         }
 
         Event event = new Event();
@@ -76,14 +76,14 @@ class EventController {
         return event;
     }
 
-    // Query: Event anhand der ID abrufen
+    // Query: Retrieve an event by ID
     @QueryMapping
     public Event event(@Argument String id) {
         return Optional.ofNullable(events.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
+                .orElseThrow(() -> new NoSuchElementException("Event with the specified ID was not found."));
     }
 
-    // Query: Alle Events eines bestimmten Benutzers abrufen
+    // Query: Retrieve all events for a specific user
     @QueryMapping
     public List<Event> eventsByUser(@Argument String userId) {
         return events.values().stream()
@@ -91,7 +91,7 @@ class EventController {
                 .collect(Collectors.toList());
     }
 
-    // Query: Events in einem bestimmten Zeitraum abrufen
+    // Query: Retrieve events within a specific time range
     @QueryMapping
     public List<Event> eventsByDateRange(@Argument LocalDateTime start, @Argument LocalDateTime end) {
         return events.values().stream()
@@ -99,7 +99,7 @@ class EventController {
                 .collect(Collectors.toList());
     }
 
-    // Mutation: Event aktualisieren
+    // Mutation: Update an event
     @MutationMapping
     public Event updateEvent(
             @Argument String id,
@@ -109,7 +109,7 @@ class EventController {
             @Argument Priority priority,
             @Argument String categoryId) {
         Event event = Optional.ofNullable(events.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Event mit der angegebenen ID wurde nicht gefunden."));
+                .orElseThrow(() -> new NoSuchElementException("Event with the specified ID was not found."));
 
         if (title != null) event.setTitle(title);
         if (start != null) event.setStart(start);
@@ -119,9 +119,10 @@ class EventController {
         return event;
     }
 
-    // Mutation: Event löschen
+    // Mutation: Delete an event
     @MutationMapping
     public boolean deleteEvent(@Argument String id) {
         return events.remove(id) != null;
     }
 }
+

@@ -131,13 +131,13 @@ body {
     width: var(--sidebar-width);
     padding: 12px;
     border-right: 1px solid var(--border-color);
-    height: calc(100vh - 64px); /* Höhe des Viewports minus Header */
-    overflow-y: auto; /* Aktiviert Scrolling */
-    scrollbar-width: thin; /* Für Firefox */
+    height: calc(100vh - 64px); /* Height of the  Viewports minus Header */
+    overflow-y: auto; /* enables Scrolling */
+    scrollbar-width: thin; /* for Firefox */
     scrollbar-color: var(--border-color) transparent; /* Für Firefox */
 }
 
-/* Styling für Webkit Browser (Chrome, Safari, Edge) */
+/* Styling for Webkit Browser (Chrome, Safari, Edge) */
 .sidebar::-webkit-scrollbar {
     width: 8px;
 }
@@ -191,18 +191,18 @@ body {
     border-left: 1px solid var(--border-color);
     background: white;
 }
-/*Individual day colmn*/
+/* Individual day colmn*/
 .day-column {
-    min-height: 1440px; /* 24 Stunden * 60px */
+    min-height: 1440px; /* 24 hrs * 60px */
     border-right: 1px solid var(--border-color);
     position: relative;
     background: white;
 }
-/* Zeitlinien für jede Stunde */
+/* Timelines for each hour*/
 .day-column::after {
     content: '';
     position: absolute;
-    top: 50px; /* Nach dem Header */
+    top: 50px; /* After the Header */
     left: 0;
     right: 0;
     bottom: 0;
@@ -303,7 +303,7 @@ body {
     }
 } 
 
-/* Neue Styles für die Features */
+/* New styles for the features */
 .stats-section {
     margin: 24px 0;
     padding: 16px;
@@ -338,7 +338,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Prioritäts-Farben für events */
+/* Priority colors for events */
 .color-dot.priority-high { 
     background-color: #dc3545; 
 }
@@ -375,7 +375,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* Prioritätsfarben */
+/* Priority colors */
 .event-item.priority-high {
     background: linear-gradient(45deg, #dc3545, #ff6b6b);
     color: white;
@@ -455,7 +455,7 @@ body {
     transform: scale(0.95);
 }
 
-/* Verbesserte Zeitanzeige */
+/* Enhanced time display */
 .event-time {
     font-size: 11px;
     opacity: 0.9;
@@ -470,7 +470,7 @@ body {
 .modal-body {
     padding: 20px;
 }
-
+/* Adds spacing and aligns priority options horizontally */
 .priority-selector {
     display: flex;
     gap: 10px;
@@ -483,12 +483,12 @@ body {
     cursor: pointer;
     border: 1px solid var(--border-color);
 }
-
+/* Removes the border and sets text color for selected priority */
 .priority-option.selected {
     color: white;
     border: none;
 }
-
+/* Defines background colors based on priority level */
 .priority-option.high.selected {
     background-color: #dc3545;
 }
@@ -501,7 +501,7 @@ body {
     background-color: #28a745;
 } 
 
-/* Verbesserte Zeitlinien */
+/* Improved timelines */
 .time-indicator {
     position: absolute;
     left: 0;
@@ -522,7 +522,7 @@ body {
     border-radius: 50%;
 } 
 
-/* Monatsansicht Styles */
+/* Monthly view styles */
 .month-cell {
     min-height: 100px;
     border: 1px solid var(--border-color);
