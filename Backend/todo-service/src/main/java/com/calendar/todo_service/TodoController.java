@@ -16,22 +16,22 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 /**
- * REST-Controller für das Todo-Management.
- * Unterstützt CRUD-Operationen und HATEOAS-Links.
+ * REST controller for Todo management.
+ * Supports CRUD operations and HATEOAS links.
  */
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
 
-    // In-Memory-Speicher für Todos
+    // In-memory storage for todos
     private final Map<String, Todo> todos = new ConcurrentHashMap<>();
 
     /**
      * GET /api/todos/{id}
-     * Gibt ein einzelnes Todo zurück, basierend auf der ID.
+     * Returns a single todo based on the ID.
      *
-     * @param id Die ID des gewünschten Todos.
-     * @return Das Todo mit HATEOAS-Links.
+     * @param id The ID of the requested todo.
+     * @return The todo with HATEOAS links.
      */
     @GetMapping("/{id}")
     public EntityModel<Todo> getTodo(@PathVariable String id) {
@@ -40,7 +40,7 @@ public class TodoController {
             throw new TodoNotFoundException(id);
         }
 
-        // Rückgabe des Todos mit Links zu weiteren relevanten Ressourcen
+        // Return the todo with links to other relevant resources
         return EntityModel.of(todo,
             linkTo(methodOn(TodoController.class).getTodo(id)).withSelfRel(),
             linkTo(methodOn(TodoController.class).getAllTodos(todo.getUserId())).withRel("user-todos"),
@@ -50,38 +50,38 @@ public class TodoController {
 
     /**
      * GET /api/todos?userId={userId}
-     * Gibt alle Todos eines Benutzers zurück.
+     * Returns all todos of a user.
      *
-     * @param userId Die ID des Benutzers, dessen Todos abgerufen werden sollen.
-     * @return Eine Sammlung von Todos mit HATEOAS-Links.
+     * @param userId The ID of the user whose todos should be retrieved.
+     * @return A collection of todos with HATEOAS links.
      */
     @GetMapping
     public CollectionModel<EntityModel<Todo>> getAllTodos(@RequestParam String userId) {
         List<EntityModel<Todo>> todoEntities = todos.values().stream()
-            .filter(todo -> todo.getUserId().equals(userId)) // Filtere nach Benutzer-ID
+            .filter(todo -> todo.getUserId().equals(userId)) // Filter by user ID
             .map(todo -> EntityModel.of(todo,
                 linkTo(methodOn(TodoController.class).getTodo(todo.getId())).withSelfRel(),
                 linkTo(methodOn(TodoController.class).toggleTodo(todo.getId())).withRel("toggle")))
             .collect(Collectors.toList());
 
-        // Rückgabe der Todos des Benutzers
+        // Return the user's todos
         return CollectionModel.of(todoEntities,
             linkTo(methodOn(TodoController.class).getAllTodos(userId)).withSelfRel());
     }
 
     /**
      * POST /api/todos
-     * Erstellt ein neues Todo.
+     * Creates a new todo.
      *
-     * @param todo Die Daten des zu erstellenden Todos im Request-Body.
-     * @return Das erstellte Todo mit HATEOAS-Links.
+     * @param todo The data of the todo to be created in the request body.
+     * @return The created todo with HATEOAS links.
      */
     @PostMapping
     public ResponseEntity<?> createTodo(@RequestBody Todo todo) {
         todo.setId(UUID.randomUUID().toString());
-        todo.setCompleted(false); // Standardstatus: nicht abgeschlossen
+        todo.setCompleted(false); // Default status: not completed
 
-        // Validierung der Eingabedaten
+        // Validate input data
         if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Title is required");
         }
@@ -89,12 +89,12 @@ public class TodoController {
             return ResponseEntity.badRequest().body("UserId is required");
         }
         if (todo.getDescription() == null) {
-            todo.setDescription(""); // Standard leere Beschreibung
+            todo.setDescription(""); // Default empty description
         }
 
         todos.put(todo.getId(), todo);
 
-        // Rückgabe des erstellten Todos
+        // Return the created todo
         EntityModel<Todo> resource = EntityModel.of(todo,
             linkTo(methodOn(TodoController.class).getTodo(todo.getId())).withSelfRel(),
             linkTo(methodOn(TodoController.class).getAllTodos(todo.getUserId())).withRel("user-todos"),
@@ -108,10 +108,10 @@ public class TodoController {
 
     /**
      * PATCH /api/todos/{id}/toggle
-     * Ändert den Status (abgeschlossen/nicht abgeschlossen) eines Todos.
+     * Changes the status (completed/not completed) of a todo.
      *
-     * @param id Die ID des Todos.
-     * @return Das aktualisierte Todo mit HATEOAS-Links.
+     * @param id The ID of the todo.
+     * @return The updated todo with HATEOAS links.
      */
     @PatchMapping("/{id}/toggle")
     public EntityModel<Todo> toggleTodo(@PathVariable String id) {
@@ -120,7 +120,7 @@ public class TodoController {
             throw new TodoNotFoundException(id);
         }
 
-        // Status umschalten
+        // Toggle status
         todo.setCompleted(!todo.isCompleted());
         todos.put(id, todo);
 
@@ -133,10 +133,10 @@ public class TodoController {
 
     /**
      * DELETE /api/todos/{id}
-     * Löscht ein Todo basierend auf der ID.
+     * Deletes a todo based on the ID.
      *
-     * @param id Die ID des zu löschenden Todos.
-     * @return Eine leere Antwort bei Erfolg.
+     * @param id The ID of the todo to be deleted.
+     * @return An empty response on success.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable String id) {
@@ -148,10 +148,10 @@ public class TodoController {
     }
 
     /**
-     * Fehlerbehandlung für nicht gefundene Todos.
+     * Error handling for non-existent todos.
      *
-     * @param ex Die ausgelöste Exception.
-     * @return Eine Fehlerantwort mit dem Status 404.
+     * @param ex The triggered exception.
+     * @return An error response with status 404.
      */
     @ExceptionHandler(TodoNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -161,19 +161,19 @@ public class TodoController {
 }
 
 /**
- * Modellklasse für Todos.
+ * Model class for todos.
  */
 @Data
 class Todo {
-    private String id;           // Eindeutige ID des Todos
-    private String userId;       // ID des zugehörigen Benutzers
-    private String title;        // Titel des Todos
-    private String description;  // Beschreibung des Todos
-    private boolean completed;   // Status des Todos (abgeschlossen/nicht abgeschlossen)
+    private String id;           // Unique ID of the todo
+    private String userId;       // ID of the associated user
+    private String title;        // Title of the todo
+    private String description;  // Description of the todo
+    private boolean completed;   // Status of the todo (completed/not completed)
 }
 
 /**
- * Exception für den Fall, dass ein Todo nicht gefunden wird.
+ * Exception for cases where a todo is not found.
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class TodoNotFoundException extends RuntimeException {
@@ -181,4 +181,3 @@ class TodoNotFoundException extends RuntimeException {
         super("Could not find todo " + id);
     }
 }
- 
