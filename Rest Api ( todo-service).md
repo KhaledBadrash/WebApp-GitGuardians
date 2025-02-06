@@ -23,6 +23,28 @@ Eine kurze Übersicht über die verwendeten Technologien:
 Der **Todo-Service** basiert auf einer klassischen **Client-Server-Architektur**. Das bedeutet, dass verschiedene Clients, mit dem Server über **HTTP-Anfragen** kommunizieren, um Todos zu **erstellen**, **abzurufen**, **zu aktualisieren** oder **zu löschen**.
 
 Die API folgt den **REST-Prinzipien**, wodurch jede Ressource über eine **eindeutige URL** erreichbar ist. Die Kommunikation erfolgt über die gängigen **HTTP-Methoden**:
+```
+###Datenmodell – Aufbau der Todo-Controller-Klasse
+**Attribute:**
+```
+@Data
+class Todo {
+    private String id;           // Eindeutige ID des Todos
+    private String userId;       // ID des zugehörigen Benutzers
+    private String title;        // Titel des Todos
+    private String description;  // Beschreibung des Todos
+    private boolean completed;   // Status des Todos (abgeschlossen/nicht abgeschlossen)
+}
+```
+-Jedes Todo besteht aus einer ID, einem Titel, einer Beschreibung, einem Status und einer Benutzer-ID.
+
+-Die @Data-Annotation von Lombok sorgt dafür, dass Getter/Setter automatisch generiert werden
+
+**Datenspeicherung:**
+```
+private final Map<String, Todo> todos = new ConcurrentHashMap<>();
+```
+-Die Datenspeicherung findet hier statt
 
 ```
 ╔═════════════╤════════════════════════════════════════════════════════════════════════════════════════╗
