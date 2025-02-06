@@ -96,8 +96,8 @@ class UserController {
     }
 
     /**
-     * Benutzer abrufen
-     * Gibt einen Benutzer anhand der ID zurück.
+     * Retrieve user
+     * Returns a user based on the ID.
      */
     @GetMapping("/{id}")
     public EntityModel<User> getUser(@PathVariable String id) {
@@ -113,8 +113,8 @@ class UserController {
     }
 
     /**
-     * Alle Benutzer abrufen
-     * Gibt eine Liste aller gespeicherten Benutzer zurück.
+     * Retrieve all users
+     * Returns a list of all stored users.
      */
     @GetMapping
     public CollectionModel<EntityModel<User>> getAllUsers() {
@@ -127,11 +127,9 @@ class UserController {
             linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel());
     }
 
-
-
-        /**
-     * Benutzer aktualisieren
-     * Aktualisiert einen vorhandenen Benutzer mit neuen Daten.
+    /**
+     * Update user
+     * Updates an existing user with new data.
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User newUser) {
@@ -151,8 +149,8 @@ class UserController {
     }
 
     /**
-     * Benutzer löschen
-     * Entfernt einen Benutzer anhand der ID.
+     * Delete user
+     * Removes a user based on the ID.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
@@ -165,8 +163,8 @@ class UserController {
 }
 
 /**
- * Benutzer-Datenklasse
- * Repräsentiert die Benutzerdaten mit ID, E-Mail, Name und Passwort.
+ * User data class
+ * Represents user data with ID, email, name, and password.
  */
 @Data
 class User {
@@ -177,8 +175,8 @@ class User {
 }
 
 /**
- * Benutzer nicht gefunden Ausnahme
- * Wird geworfen, wenn ein Benutzer mit einer bestimmten ID nicht existiert.
+ * User not found exception
+ * Thrown when a user with a specific ID does not exist.
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class UserNotFoundException extends RuntimeException {
@@ -186,4 +184,3 @@ class UserNotFoundException extends RuntimeException {
         super("Could not find user " + id);
     }
 }
-
