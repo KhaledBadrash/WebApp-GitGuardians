@@ -148,19 +148,35 @@ class EventService {
 }
 
 // REST Todo Service
+// REST Todo Service
 class TodoService {
     // Alle Todos eines Benutzers abrufen
     static async getTodos(userId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos?userId=${userId}`);
-            if (!response.ok) throw new Error('Fehler beim Laden der Todos');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            return data._embedded.todoList.map(todo => ({
-                ...todo,
-                links: todo._links, // HATEOAS-Links hinzufügen
-            }));
+            
+            // Prüfe ob die Antwort ein Array ist oder die erwartete Struktur hat
+            if (Array.isArray(data)) {
+                return data.map(todo => ({
+                    ...todo,
+                    links: todo._links || {},
+                }));
+            } else if (data._embedded && data._embedded.todoList) {
+                return data._embedded.todoList.map(todo => ({
+                    ...todo,
+                    links: todo._links || {},
+                }));
+            } else {
+                // Fallback wenn keine Todos gefunden wurden
+                return [];
+            }
         } catch (error) {
-            handleError(error);
+            console.error('Fehler beim Laden der Todos:', error);
+            return []; // Leeres Array zurückgeben statt Error zu werfen
         }
     }
 
@@ -169,45 +185,69 @@ class TodoService {
         try {
             const response = await fetch(`${API_BASE_URL}/todos`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, description, userId }),
+                headers: {
+                    ...defaultHeaders,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, description, userId, completed: false })
             });
-            if (!response.ok) throw new Error('Fehler beim Erstellen des Todos');
+
+            if (!response.ok) {
+                throw new Error('Fehler beim Erstellen des Todos');
+            }
+
             const todo = await response.json();
             return {
                 ...todo,
-                links: todo._links, // HATEOAS-Links hinzufügen
+                links: todo._links || {},
             };
         } catch (error) {
-            handleError(error);
+            console.error('Fehler beim Erstellen des Todos:', error);
+            throw error;
         }
     }
 
     // Todo-Status umschalten
-    static async toggleTodo(todo) {
+    static async toggleTodo(todoId) {
         try {
-            const toggleLink = todo.links.toggle.href;
-            const response = await fetch(toggleLink, { method: 'PATCH' });
-            if (!response.ok) throw new Error('Fehler beim Aktualisieren des Todos');
-            const updatedTodo = await response.json();
-            return {
-                ...updatedTodo,
-                links: updatedTodo._links,
-            };
+            const response = await fetch(`${API_BASE_URL}/todos/${todoId}/toggle`, {
+                method: 'PATCH',
+                headers: defaultHeaders
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Todo nicht gefunden');
+                }
+                throw new Error('Fehler beim Umschalten des Todo-Status');
+            }
+
+            return await response.json();
         } catch (error) {
-            handleError(error);
+            console.error('Fehler beim Umschalten des Todo-Status:', error);
+            throw error;
         }
     }
 
     // Todo löschen
-    static async deleteTodo(todo) {
+    static async deleteTodo(todoId) {
         try {
-            const deleteLink = todo.links.self.href;
-            const response = await fetch(deleteLink, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Fehler beim Löschen des Todos');
+            const response = await fetch(`${API_BASE_URL}/todos/${todoId}`, {
+                method: 'DELETE',
+                headers: defaultHeaders
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Todo nicht gefunden');
+                }
+                throw new Error('Fehler beim Löschen des Todos');
+            }
+
             return true;
         } catch (error) {
-            handleError(error);
+            console.error('Fehler beim Löschen des Todos:', error);
+            throw error;
         }
     }
 
@@ -215,18 +255,25 @@ class TodoService {
     static async getTodoById(todoId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos/${todoId}`);
-            if (!response.ok) throw new Error('Todo nicht gefunden');
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Todo nicht gefunden');
+                }
+                throw new Error('Fehler beim Laden des Todos');
+            }
+
             const todo = await response.json();
             return {
                 ...todo,
-                links: todo._links,
+                links: todo._links || {},
             };
         } catch (error) {
-            handleError(error);
+            console.error('Fehler beim Laden des Todos:', error);
+            throw error;
         }
     }
 }
-
 // REST User Service --> should be done
 class UserService {
     // Login-Methode
@@ -261,7 +308,9 @@ class UserService {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(user)
             });
-        
+
+            const data = await response.json();
+
             if (!response.ok) {
                 // Versuch, die Antwort als JSON zu parsen
                 let errorData;
@@ -274,7 +323,6 @@ class UserService {
                 throw new Error(errorData.message || 'Registrierung fehlgeschlagen');
             }
         
-            const data = await response.json();
             return data;
         } catch (error) {
             console.error('Registrierungsfehler:', error);
