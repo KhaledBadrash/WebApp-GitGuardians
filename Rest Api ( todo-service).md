@@ -25,15 +25,53 @@ Der **Todo-Service** basiert auf einer klassischen **Client-Server-Architektur**
 Die API folgt den **REST-Prinzipien**, wodurch jede Ressource über eine **eindeutige URL** erreichbar ist. Die Kommunikation erfolgt über die gängigen **HTTP-Methoden**:
 
 ```
-╔═════════════╤════════════════════════════════════════════════╗
-║ Methode     │ Bedeutung                                      ║
-╠═════════════╪════════════════════════════════════════════════╣
-║ 🟢 GET      │ Ruft eine oder mehrere Aufgaben (Todos) ab     ║
-║ 🟡 POST     │ Erstellt ein neues Todo                        ║
-║ 🔵 PATCH    │ Aktualisiert ein vorhandenes Todo, z. B. Status║
-║ 🔴 DELETE   │ Entfernt ein Todo aus der Liste                ║
-╚═════════════╧════════════════════════════════════════════════╝
+╔═════════════╤════════════════════════════════════════════════════════════════════════════════════════╗
+║ Methode     │ Bedeutung                                                                            ║
+╠═════════════╪════════════════════════════════════════════════════════════════════════════════════════╣
+║ 🟢 GET      │ Ruft eine oder mehrere Aufgaben (Todos) ab                                          ║
+║             │ ```java                                                                             ║
+║             │ @GetMapping("/{id}")                                                                ║
+║             │ public EntityModel<Todo> getTodo(@PathVariable String id) {                        ║
+║             │     Todo todo = todos.get(id);                                                     ║
+║             │     if (todo == null) throw new TodoNotFoundException(id);                         ║
+║             │     return EntityModel.of(todo);                                                   ║
+║             │ }                                                                                  ║
+║             │ ```                                                                                ║
+╠═════════════╪════════════════════════════════════════════════════════════════════════════════════════╣
+║ 🟡 POST     │ Erstellt ein neues Todo                                                             ║
+║             │ ```java                                                                             ║
+║             │ @PostMapping                                                                       ║
+║             │ public ResponseEntity<?> createTodo(@RequestBody Todo todo) {                     ║
+║             │     todo.setId(UUID.randomUUID().toString());                                      ║
+║             │     todos.put(todo.getId(), todo);                                                ║
+║             │     return ResponseEntity.ok(todo);                                               ║
+║             │ }                                                                                  ║
+║             │ ```                                                                                ║
+╠═════════════╪════════════════════════════════════════════════════════════════════════════════════════╣
+║ 🔵 PATCH    │ Aktualisiert ein vorhandenes Todo, z. B. den Status                                ║
+║             │ ```java                                                                             ║
+║             │ @PatchMapping("/{id}/toggle")                                                     ║
+║             │ public EntityModel<Todo> toggleTodo(@PathVariable String id) {                    ║
+║             │     Todo todo = todos.get(id);                                                     ║
+║             │     if (todo == null) throw new TodoNotFoundException(id);                         ║
+║             │     todo.setCompleted(!todo.isCompleted());                                       ║
+║             │     return EntityModel.of(todo);                                                  ║
+║             │ }                                                                                  ║
+║             │ ```                                                                                ║
+╠═════════════╪════════════════════════════════════════════════════════════════════════════════════════╣
+║ 🔴 DELETE   │ Entfernt ein Todo aus der Liste                                                    ║
+║             │ ```java                                                                             ║
+║             │ @DeleteMapping("/{id}")                                                           ║
+║             │ public ResponseEntity<?> deleteTodo(@PathVariable String id) {                    ║
+║             │     if (!todos.containsKey(id)) throw new TodoNotFoundException(id);              ║
+║             │     todos.remove(id);                                                             ║
+║             │     return ResponseEntity.noContent().build();                                   ║
+║             │ }                                                                                  ║
+║             │ ```                                                                                ║
+╚═════════════╧════════════════════════════════════════════════════════════════════════════════════════╝
+
 ```
+
 
 ### Fehlerbehandlung und Exceptions
 
