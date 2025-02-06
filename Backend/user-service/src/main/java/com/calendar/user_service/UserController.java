@@ -15,82 +15,80 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-// Diese Klasse ist ein Spring REST-Controller, der Benutzerverwaltung implementiert
+// This class is a Spring REST controller that implements user management
 @RestController
 @RequestMapping("/api/users")
 class UserController {
     
-    // Eine thread-sichere Map zur Speicherung von Benutzerdaten
+    // A thread-safe map for storing user data
     private final Map<String, User> users = new ConcurrentHashMap<>();
 
     /**
-     * Login-Methode
-     * Prüft, ob die Anmeldedaten korrekt sind, und gibt einen Token zurück.
+     * Login method
+     * Checks whether the login credentials are correct and returns a token.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginUser) {
-        // Eingabedaten validieren
+        // Validate input data
         if (loginUser.getEmail() == null || loginUser.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Email und Passwort müssen angegeben werden");
+                .body("Email and password must be provided");
         }
     
-        // Benutzer anhand der E-Mail suchen
+        // Search for the user by email
         User user = users.values().stream()
             .filter(u -> u.getEmail().equals(loginUser.getEmail()))
             .findFirst()
             .orElse(null);
     
-        // Benutzer existiert nicht
+        // User does not exist
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Benutzer mit dieser E-Mail wurde nicht gefunden");
+                .body("User with this email was not found");
         }
     
-        // Passwortprüfung
+        // Password verification
         if (!user.getPassword().equals(loginUser.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Das eingegebene Passwort ist falsch");
+                .body("The entered password is incorrect");
         }
     
-        // Erfolgreiche Authentifizierung - Dummy-Token generieren
+        // Successful authentication - generate a dummy token
         String token = UUID.randomUUID().toString();
         return ResponseEntity.ok(EntityModel.of(user,
             linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel())
             .add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")));
     }
 
-
-
-       /**
-     * Registrierungsmethode
-     * Fügt einen neuen Benutzer hinzu, wenn die E-Mail noch nicht registriert wurde.
+    /**
+     * Registration method
+     * Adds a new user if the email is not already registered.
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (user.getEmail() == null || user.getName() == null || user.getPassword() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Alle Felder (Email, Name, Passwort) müssen ausgefüllt sein");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("All fields (Email, Name, Password) must be filled");
         }
     
         boolean emailExists = users.values().stream()
             .anyMatch(u -> u.getEmail().equals(user.getEmail()));
     
         if (emailExists) {
-            return ResponseEntity.badRequest().body("Email bereits registriert");
+            return ResponseEntity.badRequest().body("Email already registered");
         }
     
-        // Benutzer ID generieren und speichern
+        // Generate and store user ID
         user.setId(UUID.randomUUID().toString());
         users.put(user.getId(), user);
 
         if (user.getEmail() == null || user.getName() == null || user.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Collections.singletonMap("message", "Alle Felder (Email, Name, Passwort) müssen ausgefüllt sein"));
+                .body(Collections.singletonMap("message", "All fields (Email, Name, Password) must be filled"));
         }
 
         if (emailExists) {
             return ResponseEntity.badRequest()
-                .body(Collections.singletonMap("message", "Email bereits registriert"));
+                .body(Collections.singletonMap("message", "Email already registered"));
         }
     
         return ResponseEntity.ok(EntityModel.of(user,
