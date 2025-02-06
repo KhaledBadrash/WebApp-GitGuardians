@@ -23,7 +23,7 @@ Eine kurze Übersicht über die verwendeten Technologien:
 Der **Todo-Service** basiert auf einer klassischen **Client-Server-Architektur**. Das bedeutet, dass verschiedene Clients, mit dem Server über **HTTP-Anfragen** kommunizieren, um Todos zu **erstellen**, **abzurufen**, **zu aktualisieren** oder **zu löschen**.
 
 Die API folgt den **REST-Prinzipien**, wodurch jede Ressource über eine **eindeutige URL** erreichbar ist. Die Kommunikation erfolgt über die gängigen **HTTP-Methoden**:
-```
+
 ###Datenmodell – Aufbau der Todo-Controller-Klasse
 **Attribute:**
 ```
@@ -44,9 +44,11 @@ class Todo {
 ```
 private final Map<String, Todo> todos = new ConcurrentHashMap<>();
 ```
+
 -Die Datenspeicherung findet hier statt
 
 ```
+
 ╔═════════════╤════════════════════════════════════════════════════════════════════════════════════════╗
 ║ Methode     │ Bedeutung                                                                            ║
 ╠═════════════╪════════════════════════════════════════════════════════════════════════════════════════╣
