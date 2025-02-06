@@ -128,3 +128,12 @@ Erklärung:
 -Statt eines generischen Serverfehlers erhält der Client eine benutzerfreundliche Fehlermeldung.
 
 -Diese Struktur stellt sicher, dass die API verständliche und standardisierte Fehlerantworten liefert.
+### **Zusammenfassung**
+
+Die **Todo-Service API** ist eine REST-basierte Schnittstelle zur Verwaltung von Aufgaben (Todos) und bietet grundlegende CRUD-Funktionalitäten. Über verschiedene Endpunkte können Todos erstellt, abgerufen, aktualisiert und gelöscht werden. Dabei folgt die API den REST-Prinzipien und stellt sicher, dass jede Ressource über eine eindeutige URL erreichbar ist.
+
+Die Datenhaltung erfolgt derzeit in einer **In-Memory `ConcurrentHashMap`**, wodurch die Todos nur während der Laufzeit der Anwendung verfügbar sind. Die API verfügt über eine **zentrale Fehlerbehandlung**, die sicherstellt, dass nicht gefundene Todos mit einer `TodoNotFoundException` abgefangen werden und eine klare `404 Not Found`-Antwort zurückgegeben wird.
+
+Zur besseren Nutzung der API sind HATEOAS-Links in den Antworten integriert, wodurch Clients eine intuitive Navigation zwischen den verfügbaren Aktionen erhalten. Neben der Verwaltung einzelner Todos ermöglicht die API auch das Abrufen aller Todos eines bestimmten Nutzers und das Umschalten des Status zwischen „offen“ und „abgeschlossen“.
+
+Die Todo-Service API bietet eine solide Basis für Aufgabenmanagement und kann flexibel erweitert werden, beispielsweise durch eine Anbindung an eine persistente Datenbank oder zusätzliche Funktionen.
