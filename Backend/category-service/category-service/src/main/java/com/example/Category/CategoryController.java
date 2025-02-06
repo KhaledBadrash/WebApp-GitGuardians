@@ -86,9 +86,9 @@ public class CategoryController {
     }
 
     /**
-     * *Gemeinsame Methode zum Erstellen und Aktualisieren einer Kategorie*
-     * Falls id null ist → Neue Kategorie wird erstellt.
-     * Falls id gesetzt ist → Vorhandene Kategorie wird aktualisiert.
+     * *Common method to create and update a category 
+     * If id is null → New category is created.
+     * If id is set → Existing category is updated.
      */
     public ResponseEntity<EntityModel<Category>> saveCategory(Category category, Integer id) {
         if (id == null) { // Neue Kategorie erstellen
