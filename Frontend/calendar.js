@@ -1,15 +1,13 @@
-import { api } from './api.js'; // Stellt Deine API-Funktionen bereit
-import { Calendar } from 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/+esm';
-import dayGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/+esm';
-import timeGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/+esm';
-import interactionPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/+esm';
+import { api } from './api.js';
 
 // ============================
 // Globale Variablen & DOM-Elemente
 // ============================
 let currentUser = null;
-let calendar = null;
-let eventModal = null; // Bootstrap Modal-Instanz
+let currentDate = new Date();
+let currentView = 'month';
+let events = [];
+let eventModal = null;
 
 const authContainer = document.getElementById('auth-container');
 const mainContainer = document.getElementById('main-container');
@@ -21,85 +19,77 @@ const toastContainer = document.querySelector('.toast-container');
 // ============================
 // Authentifizierungs- & UI-Toggle
 // ============================
-
-// Wechsel zwischen Login und Registrierung
-document.getElementById('show-register').addEventListener('click', (e) => {
+document.getElementById('show-register')?.addEventListener('click', (e) => {
     e.preventDefault();
     loginBox.classList.add('d-none');
     registerBox.classList.remove('d-none');
-  });
-  
-  document.getElementById('show-login').addEventListener('click', (e) => {
+});
+
+document.getElementById('show-login')?.addEventListener('click', (e) => {
     e.preventDefault();
     registerBox.classList.add('d-none');
     loginBox.classList.remove('d-none');
-  });
-  
+});
 
 // Login-Formular
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  try {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    currentUser = await api.users.login(email, password);
-    document.getElementById('login-form').reset();
-    showMainApp();
-    showToast('Erfolgreich eingeloggt', 'success');
-  } catch (error) {
-    showToast('Login fehlgeschlagen: ' + error.message, 'error');
-  }
+document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        currentUser = await api.users.login(email, password);
+        document.getElementById('login-form').reset();
+        showMainApp();
+        showToast('Erfolgreich eingeloggt', 'success');
+    } catch (error) {
+        showToast('Login fehlgeschlagen: ' + error.message, 'error');
+    }
 });
 
 // Registrierungs-Formular
-document.getElementById('register-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  try {
-    const userData = {
-      name: document.getElementById('register-name').value,
-      email: document.getElementById('register-email').value,
-      password: document.getElementById('register-password').value
-    };
-    currentUser = await api.users.register(userData);
-    document.getElementById('register-form').reset();
-    showMainApp();
-    showToast('Registrierung erfolgreich', 'success');
-  } catch (error) {
-    showToast('Registrierung fehlgeschlagen: ' + error.message, 'error');
-  }
+document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        const userData = {
+            name: document.getElementById('register-name').value,
+            email: document.getElementById('register-email').value,
+            password: document.getElementById('register-password').value
+        };
+        currentUser = await api.users.register(userData);
+        document.getElementById('register-form').reset();
+        showMainApp();
+        showToast('Registrierung erfolgreich', 'success');
+    } catch (error) {
+        showToast('Registrierung fehlgeschlagen: ' + error.message, 'error');
+    }
 });
 
 // Logout-Button
-document.getElementById('logout-btn').addEventListener('click', () => {
-  currentUser = null;
-  if (calendar) {
-    calendar.destroy();
-    calendar = null;
-  }
-  hideMainApp();
-  showToast('Erfolgreich ausgeloggt', 'info');
+document.getElementById('logout-btn')?.addEventListener('click', () => {
+    currentUser = null;
+    hideMainApp();
+    showToast('Erfolgreich ausgeloggt', 'info');
 });
 
 // ============================
 // To‑Do-Funktionalitäten
 // ============================
-
-document.getElementById('todo-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const input = document.getElementById('todo-input');
-  const title = input.value.trim();
-  if (!title) return;
-  try {
-    await api.todos.createTodo({
-      title,
-      userId: currentUser.id
-    });
-    input.value = '';
-    await refreshTodos();
-    showToast('Todo erstellt', 'success');
-  } catch (error) {
-    showToast('Fehler beim Erstellen des Todos: ' + error.message, 'error');
-  }
+document.getElementById('todo-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('todo-input');
+    const title = input.value.trim();
+    if (!title) return;
+    try {
+        await api.todos.createTodo({
+            title,
+            userId: currentUser.id
+        });
+        input.value = '';
+        await refreshTodos();
+        showToast('Todo erstellt', 'success');
+    } catch (error) {
+        showToast('Fehler beim Erstellen des Todos: ' + error.message, 'error');
+    }
 });
 
 async function refreshTodos() {
@@ -134,7 +124,7 @@ async function refreshTodos() {
         `).join('');
     } catch (error) {
         console.error('Fehler beim Laden der Todos:', error);
-        showToast('Fehler beim Laden der Todos. Bitte versuchen Sie es später erneut.', 'error');
+        showToast('Fehler beim Laden der Todos', 'error');
     }
 }
 
@@ -146,11 +136,11 @@ window.toggleTodo = async (todoId) => {
     } catch (error) {
         console.error('Fehler beim Umschalten des Todo-Status:', error);
         if (error.message === 'Todo nicht gefunden') {
-            showToast('Das Todo wurde nicht gefunden. Bitte laden Sie die Seite neu.', 'error');
+            showToast('Das Todo wurde nicht gefunden', 'error');
         } else {
-            showToast('Fehler beim Ändern des Todo-Status. Bitte versuchen Sie es später erneut.', 'error');
+            showToast('Fehler beim Ändern des Todo-Status', 'error');
         }
-        await refreshTodos(); // Aktualisiere die Liste um sicherzustellen, dass der UI-Status korrekt ist
+        await refreshTodos();
     }
 };
 
@@ -164,221 +154,370 @@ window.deleteTodo = async (todoId) => {
     } catch (error) {
         console.error('Fehler beim Löschen des Todos:', error);
         if (error.message === 'Todo nicht gefunden') {
-            showToast('Das Todo wurde bereits gelöscht oder existiert nicht mehr.', 'error');
+            showToast('Das Todo existiert nicht mehr', 'error');
         } else {
-            showToast('Fehler beim Löschen des Todos. Bitte versuchen Sie es später erneut.', 'error');
+            showToast('Fehler beim Löschen des Todos', 'error');
         }
-        await refreshTodos(); // Aktualisiere die Liste um sicherzustellen, dass der UI-Status korrekt ist
+        await refreshTodos();
     }
 };
 
 // ============================
-// Kalender & Event-Funktionalitäten
+// Kalender-Funktionalitäten
 // ============================
-
-function initializeCalendar() {
+function renderCalendar() {
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
-  
-    try {
-      calendar = new Calendar(calendarEl, { // <-- Hier Calendar direkt verwenden
-        plugins: [
-          dayGridPlugin,   // <-- Direkte Plugin-Referenz
-          timeGridPlugin,  // <-- Ohne FullCalendar.-Präfix
-          interactionPlugin
-        ],
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        locale: 'de',
-        selectable: true,
-        editable: true,
-        events: fetchEvents,
-        eventClick: handleEventClick,
-        dateClick: handleDateClick,
-        height: 'auto',
-        eventClassNames: function(arg) {
-          return ['event-' + arg.event.extendedProps.priority.toLowerCase()];
-        }
-      });
-  
-      calendar.render();
-    } catch (error) {
-      console.error('Error initializing calendar:', error);
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    
+    document.getElementById('currentMonth').textContent = 
+        new Date(year, month).toLocaleString('de-DE', { month: 'long', year: 'numeric' });
+
+    if (currentView === 'month') {
+        renderMonthView(calendarEl, year, month);
+    } else if (currentView === 'week') {
+        renderWeekView(calendarEl);
+    } else {
+        renderDayView(calendarEl);
     }
-  }
-  
-  async function fetchEvents(info, successCallback, failureCallback) {
-    try {
-        const response = await api.events.getEvents(info.start.toISOString(), info.end.toISOString());
-        
-        if (!response || !response.eventsByDateRange) {
-            throw new Error('Ungültige Antwort vom Server');
+}
+
+function renderMonthView(container, year, month) {
+    const firstDay = new Date(year, month, 1);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - startDate.getDay() + 1);
+
+    let html = '<table class="w-100"><thead><tr>';
+    const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    weekdays.forEach(day => {
+        html += `<th class="text-center p-2">${day}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    for (let i = 0; i < 6; i++) {
+        html += '<tr>';
+        for (let j = 0; j < 7; j++) {
+            const date = new Date(startDate);
+            const isToday = isSameDay(date, new Date());
+            const isOtherMonth = date.getMonth() !== month;
+            
+            html += `<td class="position-relative ${isToday ? 'bg-light' : ''} ${isOtherMonth ? 'text-muted' : ''}" 
+                        style="height: 100px; border: 1px solid #dee2e6;"
+                        data-date="${date.toISOString()}"
+                        onclick="handleDateClick(new Date('${date.toISOString()}'))">
+                        <div class="p-1">
+                            <span class="date-number position-absolute top-0 start-0 p-1">${date.getDate()}</span>
+                            <div class="events-container mt-4">
+                                ${renderEventsForDate(date)}
+                            </div>
+                        </div>
+                    </td>`;
+            startDate.setDate(startDate.getDate() + 1);
         }
-        
-        const events = response.eventsByDateRange.map(event => ({
-            id: event.id,
-            title: event.title,
-            start: event.start,
-            end: event.end,
-            extendedProps: {
-                priority: event.priority,
-                userId: event.userId
-            }
-        }));
-        
-        successCallback(events);
+        html += '</tr>';
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function renderEventsForDate(date) {
+    return events
+        .filter(event => isSameDay(new Date(event.start), date))
+        .map(event => `
+            <div class="event p-1 mb-1 rounded text-truncate event-${event.priority.toLowerCase()}" 
+                 style="font-size: 0.8em; cursor: pointer;"
+                 onclick="handleEventClick('${event.id}')">
+                ${event.title}
+            </div>
+        `).join('');
+}
+
+function renderWeekView(container) {
+  const startOfWeek = new Date(currentDate);
+  startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  let html = '<table class="w-100"><thead><tr><th style="width: 60px">Zeit</th>';
+  
+  // Kopfzeile mit Wochentagen
+  for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek);
+      day.setDate(startOfWeek.getDate() + i);
+      const isToday = isSameDay(day, new Date());
+      html += `<th class="text-center ${isToday ? 'bg-light' : ''}">${formatWeekDay(day)}<br>${day.getDate()}</th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  // Zeitslots
+  for (let hour = 0; hour < 24; hour++) {
+      html += '<tr>';
+      html += `<td class="text-center">${String(hour).padStart(2, '0')}:00</td>`;
+      
+      for (let i = 0; i < 7; i++) {
+          const date = new Date(startOfWeek);
+          date.setDate(startOfWeek.getDate() + i);
+          date.setHours(hour, 0, 0, 0);
+          const isNow = isCurrentHour(date);
+          
+          html += `<td class="position-relative ${isNow ? 'bg-light' : ''}" 
+                      style="height: 60px; border: 1px solid #dee2e6;"
+                      data-date="${date.toISOString()}"
+                      onclick="handleDateClick(new Date('${date.toISOString()}'))">
+                      <div class="events-container">
+                          ${renderEventsForHour(date)}
+                      </div>
+                  </td>`;
+      }
+      html += '</tr>';
+  }
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function renderDayView(container) {
+  const day = currentDate;
+  let html = '<table class="w-100"><thead><tr>';
+  html += '<th style="width: 60px">Zeit</th>';
+  html += `<th class="text-center">${formatWeekDay(day)} ${day.getDate()}</th>`;
+  html += '</tr></thead><tbody>';
+
+  // Zeitslots
+  for (let hour = 0; hour < 24; hour++) {
+      const date = new Date(day);
+      date.setHours(hour, 0, 0, 0);
+      const isNow = isCurrentHour(date);
+
+      html += '<tr>';
+      html += `<td class="text-center">${String(hour).padStart(2, '0')}:00</td>`;
+      html += `<td class="position-relative ${isNow ? 'bg-light' : ''}" 
+                  style="height: 60px; border: 1px solid #dee2e6;"
+                  data-date="${date.toISOString()}"
+                  onclick="handleDateClick(new Date('${date.toISOString()}'))">
+                  <div class="events-container">
+                      ${renderEventsForHour(date)}
+                  </div>
+              </td>`;
+      html += '</tr>';
+  }
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+// Hilfsfunktionen
+
+function formatWeekDay(date) {
+  return date.toLocaleString('de-DE', { weekday: 'short' });
+}
+
+function isCurrentHour(date) {
+  const now = new Date();
+  return date.getHours() === now.getHours() && 
+         date.getDate() === now.getDate() && 
+         date.getMonth() === now.getMonth() && 
+         date.getFullYear() === now.getFullYear();
+}
+
+function renderEventsForHour(date) {
+  return events
+      .filter(event => {
+          const eventStart = new Date(event.start);
+          return eventStart.getHours() === date.getHours() && 
+                 isSameDay(eventStart, date);
+      })
+      .map(event => `
+          <div class="event p-1 mb-1 rounded text-truncate event-${event.priority.toLowerCase()}" 
+               style="font-size: 0.8em; cursor: pointer;"
+               onclick="handleEventClick('${event.id}')">
+              ${event.title}
+          </div>
+      `).join('');
+}
+
+function isSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+}
+
+async function loadEvents() {
+    try {
+        const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const response = await api.events.getEvents(monthStart.toISOString(), monthEnd.toISOString());
+        events = response.eventsByDateRange || [];
+        renderCalendar();
     } catch (error) {
         console.error('Fehler beim Laden der Events:', error);
-        failureCallback(error);
-        showToast('Fehler beim Laden der Events: ' + error.message, 'error');
+        showToast('Fehler beim Laden der Events', 'error');
     }
 }
-  
+
+// Event Handlers für den Kalender
+window.handleDateClick = (date) => {
+    const end = new Date(date);
+    end.setHours(date.getHours() + 1);
+    document.getElementById('event-id').value = '';
+    document.getElementById('event-title').value = '';
+    document.getElementById('event-start').value = formatDateTime(date);
+    document.getElementById('event-end').value = formatDateTime(end);
+    document.getElementById('event-priority').value = 'MEDIUM';
+    document.getElementById('delete-event').classList.add('d-none');
+    eventModal.show();
+};
+
+window.handleEventClick = async (eventId) => {
+    try {
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+        
+        if (event.userId !== currentUser.id) {
+            showToast('Sie können nur Ihre eigenen Events bearbeiten.', 'error');
+            return;
+        }
+
+        document.getElementById('event-id').value = event.id;
+        document.getElementById('event-title').value = event.title;
+        document.getElementById('event-start').value = formatDateTime(new Date(event.start));
+        document.getElementById('event-end').value = formatDateTime(new Date(event.end));
+        document.getElementById('event-priority').value = event.priority;
+        document.getElementById('delete-event').classList.remove('d-none');
+        eventModal.show();
+    } catch (error) {
+        console.error('Fehler beim Laden des Events:', error);
+        showToast('Fehler beim Laden des Events', 'error');
+    }
+};
+
+// Kalender Navigation Event Listeners
+document.getElementById('prevMonth')?.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    loadEvents();
+});
+
+document.getElementById('nextMonth')?.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    loadEvents();
+});
+
+document.getElementById('today')?.addEventListener('click', () => {
+    currentDate = new Date();
+    loadEvents();
+});
+
+['monthView', 'weekView', 'dayView'].forEach(viewId => {
+    document.getElementById(viewId)?.addEventListener('click', (e) => {
+        currentView = viewId.replace('View', '');
+        document.querySelectorAll('.btn-group .btn').forEach(btn => 
+            btn.classList.remove('btn-primary'));
+        e.target.classList.add('btn-primary');
+        renderCalendar();
+    });
+});
+
+// Event Form Handler
+document.getElementById('event-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = {
+        title: document.getElementById('event-title').value,
+        start: new Date(document.getElementById('event-start').value),
+        end: new Date(document.getElementById('event-end').value),
+        priority: document.getElementById('event-priority').value,
+        userId: currentUser.id
+    };
+    const eventId = document.getElementById('event-id').value;
+    try {
+        if (eventId) {
+            await api.events.updateEvent(eventId, formData);
+        } else {
+            await api.events.createEvent(formData);
+        }
+        await loadEvents();
+        eventModal.hide();
+        showToast('Event gespeichert', 'success');
+    } catch (error) {
+        showToast('Fehler beim Speichern des Events: ' + error.message, 'error');
+    }
+});
+
+// Event Deletion Handler
+document.getElementById('delete-event')?.addEventListener('click', async () => {
+    const eventId = document.getElementById('event-id').value;
+    if (!eventId) return;
+    try {
+        await api.events.deleteEvent(eventId);
+        await loadEvents();
+        eventModal.hide();
+        showToast('Event gelöscht', 'success');
+    } catch (error) {
+        showToast('Fehler beim Löschen des Events: ' + error.message, 'error');
+    }
+});
+
+// ============================
+// App Management Funktionen
+// ============================
 function showMainApp() {
-    console.log('Showing main app...');
-    authContainer.classList.add('d-none');
-    mainContainer.classList.remove('d-none');
-    userNameDisplay.textContent = currentUser.name;
-    console.log('Initializing calendar from showMainApp');
-    setTimeout(() => {
-        initializeCalendar();
-        refreshTodos();
-    }, 100);
+  console.log('Showing main app...');
+  authContainer.classList.add('d-none');
+  mainContainer.classList.remove('d-none');
+  userNameDisplay.textContent = currentUser.name;
+  loadEvents();
+  refreshTodos();
 }
-
-
-function handleEventClick(info) {
-  const event = info.event;
-  // Nur eigene Events bearbeiten
-  if (event.extendedProps.userId !== currentUser.id) {
-    showToast('Sie können nur Ihre eigenen Events bearbeiten.', 'error');
-    return;
-  }
-  // Formularfelder füllen
-  document.getElementById('event-id').value = event.id;
-  document.getElementById('event-title').value = event.title;
-  document.getElementById('event-start').value = formatDateTime(event.start);
-  document.getElementById('event-end').value = formatDateTime(event.end);
-  document.getElementById('event-priority').value = event.extendedProps.priority;
-  document.getElementById('delete-event').classList.remove('d-none');
-  eventModal.show();
-}
-
-function handleDateClick(info) {
-  const start = new Date(info.date);
-  const end = new Date(start);
-  end.setHours(start.getHours() + 1);
-  // Neues Event – Formular leeren
-  document.getElementById('event-id').value = '';
-  document.getElementById('event-title').value = '';
-  document.getElementById('event-start').value = formatDateTime(start);
-  document.getElementById('event-end').value = formatDateTime(end);
-  document.getElementById('event-priority').value = 'MEDIUM';
-  document.getElementById('delete-event').classList.add('d-none');
-  eventModal.show();
-}
-
-// Event-Formular (Erstellen/Aktualisieren)
-document.getElementById('event-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = {
-    title: document.getElementById('event-title').value,
-    start: new Date(document.getElementById('event-start').value),
-    end: new Date(document.getElementById('event-end').value),
-    priority: document.getElementById('event-priority').value,
-    userId: currentUser.id
-  };
-  const eventId = document.getElementById('event-id').value;
-  try {
-    if (eventId) {
-      await api.events.updateEvent(eventId, formData);
-    } else {
-      await api.events.createEvent(formData);
-    }
-    calendar.refetchEvents();
-    eventModal.hide();
-    showToast('Event gespeichert', 'success');
-  } catch (error) {
-    showToast('Fehler beim Speichern des Events: ' + error.message, 'error');
-  }
-});
-
-// Event löschen
-document.getElementById('delete-event').addEventListener('click', async () => {
-  const eventId = document.getElementById('event-id').value;
-  if (!eventId) return;
-  try {
-    await api.events.deleteEvent(eventId);
-    calendar.refetchEvents();
-    eventModal.hide();
-    showToast('Event gelöscht', 'success');
-  } catch (error) {
-    showToast('Fehler beim Löschen des Events: ' + error.message, 'error');
-  }
-});
-
-// ============================
-// Hilfsfunktionen & UI-Helper
-// ============================
-
-
 
 function hideMainApp() {
-    mainContainer.classList.add('d-none');
-    authContainer.classList.remove('d-none');
-    // Formular zurücksetzen
-    loginBox.classList.remove('d-none');
-    registerBox.classList.add('d-none');
-    document.getElementById('login-form').reset();
-    document.getElementById('register-form').reset();
-  }
-
+  mainContainer.classList.add('d-none');
+  authContainer.classList.remove('d-none');
+  loginBox.classList.remove('d-none');
+  registerBox.classList.add('d-none');
+  document.getElementById('login-form').reset();
+  document.getElementById('register-form').reset();
+}
 
 function formatDateTime(date) {
   return new Date(date).toISOString().slice(0, 16);
 }
 
 function showToast(message, type = 'info') {
-  // Erstelle ein Toast-Element
   const toast = document.createElement('div');
   toast.className = `toast align-items-center text-bg-${type} border-0 mb-2`;
   toast.setAttribute('role', 'alert');
   toast.setAttribute('aria-live', 'assertive');
   toast.setAttribute('aria-atomic', 'true');
   toast.innerHTML = `
-    <div class="d-flex">
-      <div class="toast-body">
-        ${message}
+      <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Schließen"></button>
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Schließen"></button>
-    </div>
   `;
   toastContainer.appendChild(toast);
   const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
   bsToast.show();
-  toast.addEventListener('hidden.bs.toast', () => {
-    toast.remove();
-  });
+  toast.addEventListener('hidden.bs.toast', () => toast.remove());
 }
 
 // ============================
-// Initialisierung bei DOM-Ready
+// Initialisierung
 // ============================
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialisiere Bootstrap Modal für das Event-Formular
   const modalEl = document.getElementById('event-modal');
-  eventModal = new bootstrap.Modal(modalEl);
+  if (modalEl) {
+      eventModal = new bootstrap.Modal(modalEl);
+  }
 
-  // Falls Du gespeicherte Auth-Daten (z. B. in localStorage) nutzen möchtest:
   const storedAuth = localStorage.getItem('auth');
   if (storedAuth) {
-    currentUser = JSON.parse(storedAuth);
-    showMainApp();
+      try {
+          currentUser = JSON.parse(storedAuth);
+          showMainApp();
+      } catch (error) {
+          console.error('Error parsing stored auth:', error);
+          hideMainApp();
+      }
   } else {
-    hideMainApp();
+      hideMainApp();
   }
 });

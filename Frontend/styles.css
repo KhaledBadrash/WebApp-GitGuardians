@@ -207,3 +207,131 @@ hr {
     background-color: #0d6efd;
     border-color: #0d6efd;
 }
+
+/* Custom Calendar Styles */
+.custom-calendar {
+    width: 100%;
+    background: white;
+}
+
+.custom-calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-calendar th {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+}
+
+.custom-calendar td {
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+    height: 100px;
+}
+
+.custom-calendar .date-number {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.event {
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-high {
+    background-color: #dc3545;
+    color: white;
+}
+
+.event-medium {
+    background-color: #ffc107;
+    color: black;
+}
+
+.event-low {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .custom-calendar td {
+        height: 80px;
+    }
+    
+    .event {
+        font-size: 0.7em;
+    }
+}
+/* Zusätzliche Styles für Wochen- und Tagesansicht */
+.custom-calendar table {
+    table-layout: fixed;
+}
+
+.custom-calendar td {
+    position: relative;
+    padding: 0;
+    vertical-align: top;
+}
+
+.custom-calendar th {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.events-container {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Anpassungen für die Zeitanzeige */
+.custom-calendar td:first-child {
+    width: 60px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    background-color: #f8f9fa;
+}
+
+/* Event Styles anpassen */
+.event {
+    margin: 1px;
+    padding: 2px 4px;
+    font-size: 0.8em !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .custom-calendar td:first-child {
+        width: 40px;
+        font-size: 0.8em;
+    }
+    
+    .event {
+        font-size: 0.7em !important;
+    }
+    
+    .calendar-header {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .calendar-header h2 {
+        font-size: 1.2rem;
+    }
+}

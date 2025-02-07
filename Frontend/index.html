@@ -8,109 +8,105 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- FullCalendar CSS -->
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel="stylesheet">
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel="stylesheet">
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css' rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
-<!-- Login/Register Forms -->
-<div id="auth-container" class="container-fluid vh-100">
-    <div class="row h-100 align-items-center justify-content-center">
-        <div class="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3">
-            <!-- Login Form -->
-            <div class="card shadow-sm" id="login-box">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Login</h2>
-                    <form id="login-form">
-                        <div class="form-floating mb-3">
-                            <input 
-                                type="email" 
-                                class="form-control" 
-                                id="login-email" 
-                                placeholder="name@beispiel.de"
-                                required
-                            >
-                            <label for="login-email">E-Mail</label>
+        <!-- Login/Register Forms -->
+        <div id="auth-container" class="container-fluid vh-100">
+            <div class="row h-100 align-items-center justify-content-center">
+                <div class="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+                    <!-- Login Form -->
+                    <div class="card shadow-sm" id="login-box">
+                        <div class="card-body p-4">
+                            <h2 class="text-center mb-4">Login</h2>
+                            <form id="login-form">
+                                <div class="form-floating mb-3">
+                                    <input 
+                                        type="email" 
+                                        class="form-control" 
+                                        id="login-email" 
+                                        placeholder="name@beispiel.de"
+                                        required
+                                    >
+                                    <label for="login-email">E-Mail</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="login-password" 
+                                        placeholder="Passwort"
+                                        required
+                                    >
+                                    <label for="login-password">Passwort</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    Login
+                                </button>
+                            </form>
+                            <hr class="my-4">
+                            <div class="text-center">
+                                <span class="d-block">Noch kein Konto?</span>
+                                <a href="#" id="show-register" class="text-decoration-none">
+                                    Registrieren
+                                </a>
+                            </div>
                         </div>
-                        <div class="form-floating mb-4">
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="login-password" 
-                                placeholder="Passwort"
-                                required
-                            >
-                            <label for="login-password">Passwort</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2">
-                            Login
-                        </button>
-                    </form>
-                    <hr class="my-4">
-                    <div class="text-center">
-                        <span class="d-block">Noch kein Konto?</span>
-                        <a href="#" id="show-register" class="text-decoration-none">
-                            Registrieren
-                        </a>
                     </div>
-                </div>
-            </div>
 
-            <!-- Register Form -->
-            <div class="card shadow-sm d-none" id="register-box">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Registrierung</h2>
-                    <form id="register-form">
-                        <div class="form-floating mb-3">
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="register-name" 
-                                placeholder="Max Mustermann"
-                                required
-                            >
-                            <label for="register-name">Name</label>
+                    <!-- Register Form -->
+                    <div class="card shadow-sm d-none" id="register-box">
+                        <div class="card-body p-4">
+                            <h2 class="text-center mb-4">Registrierung</h2>
+                            <form id="register-form">
+                                <div class="form-floating mb-3">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="register-name" 
+                                        placeholder="Max Mustermann"
+                                        required
+                                    >
+                                    <label for="register-name">Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input 
+                                        type="email" 
+                                        class="form-control" 
+                                        id="register-email" 
+                                        placeholder="name@beispiel.de"
+                                        required
+                                    >
+                                    <label for="register-email">E-Mail</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="register-password" 
+                                        placeholder="Passwort"
+                                        required
+                                    >
+                                    <label for="register-password">Passwort</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    Registrieren
+                                </button>
+                            </form>
+                            <hr class="my-4">
+                            <div class="text-center">
+                                <span class="d-block">Bereits registriert?</span>
+                                <a href="#" id="show-login" class="text-decoration-none">
+                                    Login
+                                </a>
+                            </div>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input 
-                                type="email" 
-                                class="form-control" 
-                                id="register-email" 
-                                placeholder="name@beispiel.de"
-                                required
-                            >
-                            <label for="register-email">E-Mail</label>
-                        </div>
-                        <div class="form-floating mb-4">
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="register-password" 
-                                placeholder="Passwort"
-                                required
-                            >
-                            <label for="register-password">Passwort</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2">
-                            Registrieren
-                        </button>
-                    </form>
-                    <hr class="my-4">
-                    <div class="text-center">
-                        <span class="d-block">Bereits registriert?</span>
-                        <a href="#" id="show-login" class="text-decoration-none">
-                            Login
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
         <!-- Main Application Content -->
         <div id="main-container" class="d-none">
@@ -127,48 +123,65 @@
                 </div>
             </nav>
 
-          <!-- Main Content -->
-<div class="container-fluid mt-4">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="bi bi-check2-square" aria-hidden="true"></i> Todos
-                    </h5>
-                    <form id="todo-form" class="mb-3">
-                        <div class="input-group">
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="todo-input" 
-                                placeholder="Neues Todo"
-                                aria-label="Neues Todo eingeben"
-                            >
-                            <button 
-                                class="btn btn-primary" 
-                                type="submit"
-                                title="Todo hinzufügen"
-                                aria-label="Todo hinzufügen"
-                            >
-                                <i class="bi bi-plus" aria-hidden="true"></i>
-                                <span class="visually-hidden">Todo hinzufügen</span>
-                            </button>
+            <!-- Main Content -->
+            <div class="container-fluid mt-4">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-check2-square" aria-hidden="true"></i> Todos
+                                </h5>
+                                <form id="todo-form" class="mb-3">
+                                    <div class="input-group">
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="todo-input" 
+                                            placeholder="Neues Todo"
+                                            aria-label="Neues Todo eingeben"
+                                        >
+                                        <button 
+                                            class="btn btn-primary" 
+                                            type="submit"
+                                            title="Todo hinzufügen"
+                                            aria-label="Todo hinzufügen"
+                                        >
+                                            <i class="bi bi-plus" aria-hidden="true"></i>
+                                            <span class="visually-hidden">Todo hinzufügen</span>
+                                        </button>
+                                    </div>
+                                </form>
+                                <ul id="todo-list" class="list-group">
+                                    <!-- Todos will be added here dynamically -->
+                                </ul>
+                            </div>
                         </div>
-                    </form>
-                    <ul id="todo-list" class="list-group">
-                        <!-- Todos will be added here dynamically -->
-                    </ul>
-                </div>
-            </div>
-        </div>
+                    </div>
 
                     <!-- Calendar -->
                     <div class="col-md-9">
                         <div class="card">
                             <div class="card-body">
-                                <div id="calendar"></div>
+                                <div class="calendar-container">
+                                    <!-- Kalender Header -->
+                                    <div class="calendar-header d-flex justify-content-between align-items-center mb-4">
+                                        <button class="btn btn-outline-primary" id="prevMonth">&lt;</button>
+                                        <button class="btn btn-outline-secondary" id="today">today</button>
+                                        <h2 id="currentMonth" class="mb-0">Februar 2025</h2>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" id="monthView">month</button>
+                                            <button class="btn btn-outline-primary" id="weekView">week</button>
+                                            <button class="btn btn-outline-primary" id="dayView">day</button>
+                                        </div>
+                                        <button class="btn btn-outline-primary" id="nextMonth">&gt;</button>
+                                    </div>
+                                    <!-- Kalender Grid -->
+                                    <div id="calendar" class="custom-calendar">
+                                        <!-- Kalender wird hier dynamisch eingefügt -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -185,6 +198,7 @@
                         </div>
                         <div class="modal-body">
                             <form id="event-form">
+                                <input type="hidden" id="event-id">
                                 <div class="mb-3">
                                     <label for="event-title" class="form-label">Titel</label>
                                     <input type="text" class="form-control" id="event-title" required>
@@ -209,7 +223,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                            <button type="submit" form="event-form" class="btn btn-primary">Speichern</button>
                             <button type="button" id="delete-event" class="btn btn-danger">Löschen</button>
                             <button type="submit" form="event-form" class="btn btn-primary">Speichern</button>
                         </div>
@@ -227,22 +240,6 @@
     <!-- Scripts -->
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!--
-    <script type="module">
-        import { Calendar } from 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/+esm';
-        import dayGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/+esm';
-        import timeGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/+esm';
-        import interactionPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/+esm';
-      
-        // Exportiere die benötigten Komponenten für calendar.js
-        window.FullCalendar = { 
-          Calendar, 
-          dayGridPlugin, 
-          timeGridPlugin, 
-          interactionPlugin 
-        };
-      </script>
--->
     <!-- Custom Scripts -->
     <script type="module" src="api.js"></script>
     <script type="module" src="calendar.js"></script>
