@@ -86,20 +86,20 @@ public class CategoryController {
     }
 
     /**
-     * *Gemeinsame Methode zum Erstellen und Aktualisieren einer Kategorie*
-     * Falls id null ist → Neue Kategorie wird erstellt.
-     * Falls id gesetzt ist → Vorhandene Kategorie wird aktualisiert.
+     * *Common method to create and update a category 
+     * If id is null → New category is created.
+     * If id is set → Existing category is updated.
      */
     public ResponseEntity<EntityModel<Category>> saveCategory(Category category, Integer id) {
-        if (id == null) { // Neue Kategorie erstellen
+        if (id == null) { // Create new category
             category.setId(idGenerator.getAndIncrement());
-        } else { // Vorhandene Kategorie aktualisieren
+        } else { // Update existing category
             if (!categories.containsKey(id)) {
                 throw new CategoryNotFoundException(id);
             }
             category.setId(id);
         }
-        categories.put(category.getId(), category); // Speichern/Aktualisieren
+        categories.put(category.getId(), category); // Save/Update
 
         EntityModel<Category> resource = EntityModel.of(category,
                 linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
@@ -115,7 +115,7 @@ public class CategoryController {
 }
 
 /**
- * *Fehlermeldung für nicht gefundene Kategorien*
+ * *Error message for categories not found*
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class CategoryNotFoundException extends RuntimeException {
