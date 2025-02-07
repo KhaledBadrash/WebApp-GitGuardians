@@ -22,11 +22,6 @@ public class EventServiceApplication {
         SpringApplication.run(EventServiceApplication.class, args);
     }
 
-    // Registering the DateTime scalar
-    @Bean
-    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder.scalar(graphql.scalars.ExtendedScalars.DateTime);
-    }
 }
 
 // Event model class

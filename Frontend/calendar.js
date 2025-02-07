@@ -1,6 +1,8 @@
-// final.js
-
 import { api } from './api.js'; // Stellt Deine API-Funktionen bereit
+import { Calendar } from 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/+esm';
+import dayGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/+esm';
+import timeGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/+esm';
+import interactionPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/+esm';
 
 // ============================
 // Globale Variablen & DOM-Elemente
@@ -22,16 +24,17 @@ const toastContainer = document.querySelector('.toast-container');
 
 // Wechsel zwischen Login und Registrierung
 document.getElementById('show-register').addEventListener('click', (e) => {
-  e.preventDefault();
-  loginBox.classList.add('d-none');
-  registerBox.classList.remove('d-none');
-});
-
-document.getElementById('show-login').addEventListener('click', (e) => {
-  e.preventDefault();
-  registerBox.classList.add('d-none');
-  loginBox.classList.remove('d-none');
-});
+    e.preventDefault();
+    loginBox.classList.add('d-none');
+    registerBox.classList.remove('d-none');
+  });
+  
+  document.getElementById('show-login').addEventListener('click', (e) => {
+    e.preventDefault();
+    registerBox.classList.add('d-none');
+    loginBox.classList.remove('d-none');
+  });
+  
 
 // Login-Formular
 document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -174,45 +177,79 @@ window.deleteTodo = async (todoId) => {
 // ============================
 
 function initializeCalendar() {
-  const calendarEl = document.getElementById('calendar');
-  calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    locale: 'de',
-    selectable: true,
-    editable: true,
-    events: fetchEvents,
-    eventClick: handleEventClick,
-    dateClick: handleDateClick,
-    eventClassNames: (arg) => {
-      return ['event-' + arg.event.extendedProps.priority.toLowerCase()];
+    const calendarEl = document.getElementById('calendar');
+    if (!calendarEl) return;
+  
+    try {
+      calendar = new Calendar(calendarEl, { // <-- Hier Calendar direkt verwenden
+        plugins: [
+          dayGridPlugin,   // <-- Direkte Plugin-Referenz
+          timeGridPlugin,  // <-- Ohne FullCalendar.-Präfix
+          interactionPlugin
+        ],
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        locale: 'de',
+        selectable: true,
+        editable: true,
+        events: fetchEvents,
+        eventClick: handleEventClick,
+        dateClick: handleDateClick,
+        height: 'auto',
+        eventClassNames: function(arg) {
+          return ['event-' + arg.event.extendedProps.priority.toLowerCase()];
+        }
+      });
+  
+      calendar.render();
+    } catch (error) {
+      console.error('Error initializing calendar:', error);
     }
-  });
-  calendar.render();
+  }
+  
+  async function fetchEvents(info, successCallback, failureCallback) {
+    try {
+        const response = await api.events.getEvents(info.start.toISOString(), info.end.toISOString());
+        
+        if (!response || !response.eventsByDateRange) {
+            throw new Error('Ungültige Antwort vom Server');
+        }
+        
+        const events = response.eventsByDateRange.map(event => ({
+            id: event.id,
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            extendedProps: {
+                priority: event.priority,
+                userId: event.userId
+            }
+        }));
+        
+        successCallback(events);
+    } catch (error) {
+        console.error('Fehler beim Laden der Events:', error);
+        failureCallback(error);
+        showToast('Fehler beim Laden der Events: ' + error.message, 'error');
+    }
+}
+  
+function showMainApp() {
+    console.log('Showing main app...');
+    authContainer.classList.add('d-none');
+    mainContainer.classList.remove('d-none');
+    userNameDisplay.textContent = currentUser.name;
+    console.log('Initializing calendar from showMainApp');
+    setTimeout(() => {
+        initializeCalendar();
+        refreshTodos();
+    }, 100);
 }
 
-async function fetchEvents(info, successCallback, failureCallback) {
-  try {
-    const response = await api.events.getEvents(info.start.toISOString(), info.end.toISOString());
-    const events = response.eventsByDateRange.map(event => ({
-      id: event.id,
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      extendedProps: {
-        priority: event.priority,
-        userId: event.userId
-      }
-    }));
-    successCallback(events);
-  } catch (error) {
-    failureCallback(error);
-  }
-}
 
 function handleEventClick(info) {
   const event = info.event;
@@ -288,23 +325,18 @@ document.getElementById('delete-event').addEventListener('click', async () => {
 // Hilfsfunktionen & UI-Helper
 // ============================
 
-function showMainApp() {
-  authContainer.classList.add('d-none');
-  mainContainer.classList.remove('d-none');
-  userNameDisplay.textContent = currentUser.name;
-  initializeCalendar();
-  refreshTodos();
-}
+
 
 function hideMainApp() {
-  mainContainer.classList.add('d-none');
-  authContainer.classList.remove('d-none');
-  // Formular zurücksetzen
-  loginBox.classList.remove('d-none');
-  registerBox.classList.add('d-none');
-  document.getElementById('login-form').reset();
-  document.getElementById('register-form').reset();
-}
+    mainContainer.classList.add('d-none');
+    authContainer.classList.remove('d-none');
+    // Formular zurücksetzen
+    loginBox.classList.remove('d-none');
+    registerBox.classList.add('d-none');
+    document.getElementById('login-form').reset();
+    document.getElementById('register-form').reset();
+  }
+
 
 function formatDateTime(date) {
   return new Date(date).toISOString().slice(0, 16);

@@ -132,13 +132,19 @@ class EventService {
     // GraphQL-Abfragen und Mutationen senden
     static async sendGraphQLQuery(query, variables) {
         try {
-            const response = await fetch(`http://localhost:8080/graphql`, {
+            const response = await fetch(`http://localhost:8080/graphql`, {                
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ query, variables }),
             });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const result = await response.json();
-            if (result.errors) throw new Error(result.errors[0].message);
+
+            if (result.errors) {
+                throw new Error(result.errors.map(e => e.message).join(', '));
+            }
             return result.data;
         } catch (error) {
             console.error("GraphQL-Fehler:", error);

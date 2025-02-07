@@ -18,6 +18,8 @@ public class GatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+            .route("event-service-graphql", r -> r.path("/graphql")
+                .uri("http://localhost:8081"))
             .route("event-service", r -> r.path("/api/events/**")
                 .uri("http://localhost:8081"))
             .route("user-service", r -> r.path("/api/users/**")
