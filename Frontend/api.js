@@ -76,9 +76,7 @@ class EventService {
                     end
                     userId
                     priority
-                    categoryId
-                }
-            }
+                    
         `;
         return this.sendGraphQLQuery(mutation, { title, start, end, userId, priority, categoryId });
     }

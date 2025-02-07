@@ -343,52 +343,81 @@ function isSameDay(date1, date2) {
 }
 
 async function loadEvents() {
-    try {
-        const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-        const response = await api.events.getEvents(monthStart.toISOString(), monthEnd.toISOString());
-        events = response.eventsByDateRange || [];
-        renderCalendar();
-    } catch (error) {
-        console.error('Fehler beim Laden der Events:', error);
-        showToast('Fehler beim Laden der Events', 'error');
-    }
+  try {
+      const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      
+      // Konvertierung in UTC
+      const utcStart = Date.UTC(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
+      const utcEnd = Date.UTC(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate() + 1);
+
+      const response = await api.events.getEvents(
+          new Date(utcStart).toISOString(),
+          new Date(utcEnd).toISOString()
+      );
+      
+      events = response.eventsByDateRange || [];
+      renderCalendar();
+  } catch (error) {
+      console.error('Fehler beim Laden der Events:', error);
+      showToast('Fehler beim Laden der Events', 'error');
+  }
 }
 
 // Event Handlers für den Kalender
 window.handleDateClick = (date) => {
-    const end = new Date(date);
-    end.setHours(date.getHours() + 1);
-    document.getElementById('event-id').value = '';
-    document.getElementById('event-title').value = '';
-    document.getElementById('event-start').value = formatDateTime(date);
-    document.getElementById('event-end').value = formatDateTime(end);
-    document.getElementById('event-priority').value = 'MEDIUM';
-    document.getElementById('delete-event').classList.add('d-none');
-    eventModal.show();
+  // Konvertiere das lokale Datum in UTC
+  const utcDate = new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes()
+    )
+  );
+
+  // Endzeit berechnen (1 Stunde später)
+  const utcEnd = new Date(utcDate);
+  utcEnd.setUTCHours(utcDate.getUTCHours() + 1);
+
+  // Formatiere die Datumsangaben in ISO-8601 mit Zeitzoneninformation
+  document.getElementById('event-id').value = '';
+  document.getElementById('event-title').value = '';
+  document.getElementById('event-start').value = formatDateTime(utcDate);
+  document.getElementById('event-end').value = formatDateTime(utcEnd);
+  document.getElementById('event-priority').value = 'MEDIUM';
+  document.getElementById('delete-event').classList.add('d-none');
+  
+  // Zeige das Modal an
+  eventModal.show();
 };
 
 window.handleEventClick = async (eventId) => {
-    try {
-        const event = events.find(e => e.id === eventId);
-        if (!event) return;
-        
-        if (event.userId !== currentUser.id) {
-            showToast('Sie können nur Ihre eigenen Events bearbeiten.', 'error');
-            return;
-        }
+  try {
+      const event = events.find(e => e.id === eventId);
+      if (!event) return;
+      
+      if (event.userId !== currentUser.id) {
+          showToast('Sie können nur Ihre eigenen Events bearbeiten.', 'error');
+          return;
+      }
 
-        document.getElementById('event-id').value = event.id;
-        document.getElementById('event-title').value = event.title;
-        document.getElementById('event-start').value = formatDateTime(new Date(event.start));
-        document.getElementById('event-end').value = formatDateTime(new Date(event.end));
-        document.getElementById('event-priority').value = event.priority;
-        document.getElementById('delete-event').classList.remove('d-none');
-        eventModal.show();
-    } catch (error) {
-        console.error('Fehler beim Laden des Events:', error);
-        showToast('Fehler beim Laden des Events', 'error');
-    }
+      // Konvertierung von UTC zu Local Time
+      const startDate = new Date(event.start);
+      const endDate = new Date(event.end);
+      
+      document.getElementById('event-id').value = event.id;
+      document.getElementById('event-title').value = event.title;
+      document.getElementById('event-start').value = formatDateTime(startDate);
+      document.getElementById('event-end').value = formatDateTime(endDate);
+      document.getElementById('event-priority').value = event.priority;
+      document.getElementById('delete-event').classList.remove('d-none');
+      eventModal.show();
+  } catch (error) {
+      console.error('Fehler beim Laden des Events:', error);
+      showToast('Fehler beim Laden des Events', 'error');
+  }
 };
 
 // Kalender Navigation Event Listeners
@@ -419,27 +448,45 @@ document.getElementById('today')?.addEventListener('click', () => {
 
 // Event Form Handler
 document.getElementById('event-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = {
-        title: document.getElementById('event-title').value,
-        start: new Date(document.getElementById('event-start').value),
-        end: new Date(document.getElementById('event-end').value),
-        priority: document.getElementById('event-priority').value,
-        userId: currentUser.id
-    };
-    const eventId = document.getElementById('event-id').value;
-    try {
-        if (eventId) {
-            await api.events.updateEvent(eventId, formData);
-        } else {
-            await api.events.createEvent(formData);
-        }
-        await loadEvents();
-        eventModal.hide();
-        showToast('Event gespeichert', 'success');
-    } catch (error) {
-        showToast('Fehler beim Speichern des Events: ' + error.message, 'error');
+  e.preventDefault();
+  
+  // Konvertiere die Eingabedaten in UTC
+  const start = new Date(document.getElementById('event-start').value);
+  const end = new Date(document.getElementById('event-end').value);
+  
+  const formData = {
+    title: document.getElementById('event-title').value,
+    start: new Date(Date.UTC(
+      start.getUTCFullYear(),
+      start.getUTCMonth(),
+      start.getUTCDate(),
+      start.getUTCHours(),
+      start.getUTCMinutes()
+    )).toISOString(),
+    end: new Date(Date.UTC(
+      end.getUTCFullYear(),
+      end.getUTCMonth(),
+      end.getUTCDate(),
+      end.getUTCHours(),
+      end.getUTCMinutes()
+    )).toISOString(),
+    priority: document.getElementById('event-priority').value,
+    userId: currentUser.id
+  };
+
+  const eventId = document.getElementById('event-id').value;
+  try {
+    if (eventId) {
+      await api.events.updateEvent(eventId, formData);
+    } else {
+      await api.events.createEvent(formData);
     }
+    await loadEvents();
+    eventModal.hide();
+    showToast('Event gespeichert', 'success');
+  } catch (error) {
+    showToast('Fehler beim Speichern des Events: ' + error.message, 'error');
+  }
 });
 
 // Event Deletion Handler
@@ -478,8 +525,9 @@ function hideMainApp() {
 }
 
 function formatDateTime(date) {
-  return new Date(date).toISOString().slice(0, 16);
+  return new Date(date).toISOString();
 }
+
 
 function showToast(message, type = 'info') {
   const toast = document.createElement('div');

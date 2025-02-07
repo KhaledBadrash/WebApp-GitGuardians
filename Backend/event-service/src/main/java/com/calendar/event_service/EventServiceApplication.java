@@ -2,18 +2,15 @@ package com.calendar.event_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 import org.springframework.stereotype.Controller;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 // Main application class
 @SpringBootApplication
@@ -21,7 +18,6 @@ public class EventServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventServiceApplication.class, args);
     }
-
 }
 
 // Event model class
@@ -29,8 +25,8 @@ public class EventServiceApplication {
 class Event {
     private String id;            // Unique ID of the event
     private String title;         // Title of the event
-    private LocalDateTime start;  // Start time
-    private LocalDateTime end;    // End time
+    private OffsetDateTime start; // Start time
+    private OffsetDateTime end;   // End time
     private String userId;        // ID of the user who created the event
     private Priority priority;    // Priority of the event
     private String categoryId;    // ID of the category (optional)
@@ -50,8 +46,8 @@ class EventController {
     @MutationMapping
     public Event createEvent(
             @Argument String title,
-            @Argument LocalDateTime start,
-            @Argument LocalDateTime end,
+            @Argument OffsetDateTime start,
+            @Argument OffsetDateTime end,
             @Argument String userId,
             @Argument Priority priority,
             @Argument String categoryId) {
@@ -83,15 +79,15 @@ class EventController {
     public List<Event> eventsByUser(@Argument String userId) {
         return events.values().stream()
                 .filter(event -> event.getUserId().equals(userId))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // Query: Retrieve events within a specific time range
     @QueryMapping
-    public List<Event> eventsByDateRange(@Argument LocalDateTime start, @Argument LocalDateTime end) {
+    public List<Event> eventsByDateRange(@Argument OffsetDateTime start, @Argument OffsetDateTime end) {
         return events.values().stream()
                 .filter(event -> !event.getStart().isBefore(start) && !event.getEnd().isAfter(end))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // Mutation: Update an event
@@ -99,8 +95,8 @@ class EventController {
     public Event updateEvent(
             @Argument String id,
             @Argument String title,
-            @Argument LocalDateTime start,
-            @Argument LocalDateTime end,
+            @Argument OffsetDateTime start,
+            @Argument OffsetDateTime end,
             @Argument Priority priority,
             @Argument String categoryId) {
         Event event = Optional.ofNullable(events.get(id))
@@ -120,4 +116,3 @@ class EventController {
         return events.remove(id) != null;
     }
 }
-
