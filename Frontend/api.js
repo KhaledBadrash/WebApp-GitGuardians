@@ -65,21 +65,37 @@ class EventService {
         return this.sendGraphQLQuery(query, { start, end });
     }
 
-    // Neues Event erstellen
-    static async createEvent({ title, start, end, userId, priority, categoryId }) {
-        const mutation = `
-            mutation CreateEvent($title: String!, $start: DateTime!, $end: DateTime!, $userId: String!, $priority: Priority!, $categoryId: String) {
-                createEvent(title: $title, start: $start, end: $end, userId: $userId, priority: $priority, categoryId: $categoryId) {
-                    id
-                    title
-                    start
-                    end
-                    userId
-                    priority
-                    
-        `;
-        return this.sendGraphQLQuery(mutation, { title, start, end, userId, priority, categoryId });
-    }
+            // Neues Event erstellen
+            static async createEvent({ title, start, end, userId, priority, categoryId }) {
+                const mutation = `
+                    mutation CreateEvent(
+                        $title: String!, 
+                        $start: DateTime!, 
+                        $end: DateTime!, 
+                        $userId: String!, 
+                        $priority: Priority!, 
+                        $categoryId: String
+                    ) {
+                        createEvent(
+                            title: $title,
+                            start: $start,
+                            end: $end,
+                            userId: $userId,
+                            priority: $priority,
+                            categoryId: $categoryId
+                        ) {
+                            id
+                            title
+                            start
+                            end
+                            userId
+                            priority
+                            categoryId
+                        }
+                    }
+                `;
+                return this.sendGraphQLQuery(mutation, { title, start, end, userId, priority, categoryId });
+            }
 
     // Event aktualisieren
     static async updateEvent(eventId, updates) {
