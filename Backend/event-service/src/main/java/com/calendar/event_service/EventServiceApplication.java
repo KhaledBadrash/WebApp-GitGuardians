@@ -99,14 +99,21 @@ class EventController {
             @Argument OffsetDateTime end,
             @Argument Priority priority,
             @Argument String categoryId) {
-        Event event = Optional.ofNullable(events.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Event with the specified ID was not found."));
-
+                Event event = Optional.ofNullable(events.get(id))
+                .orElseThrow(() -> new NoSuchElementException("Event not found"));
+    
+        // Validierung der Zeitangaben 
+        if (start != null && end != null && start.isAfter(end)) {
+            throw new IllegalArgumentException("Start time cannot be after end time");
+        }
+    
+        // Sicherstellen, dass nur vorhandene Felder aktualisiert werden 
         if (title != null) event.setTitle(title);
         if (start != null) event.setStart(start);
         if (end != null) event.setEnd(end);
         if (priority != null) event.setPriority(priority);
         if (categoryId != null) event.setCategoryId(categoryId);
+    
         return event;
     }
 

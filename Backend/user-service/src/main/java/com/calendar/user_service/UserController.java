@@ -17,8 +17,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 // This class is a Spring REST controller that implements user management
 @RestController
-@RequestMapping("/api/users")
-class UserController {
+    @RequestMapping("/api/users")
+    class UserController {
     
     // A thread-safe map for storing user data
     private final Map<String, User> users = new ConcurrentHashMap<>();
@@ -29,41 +29,30 @@ class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginUser) {
-        // Validate input data
         if (loginUser.getEmail() == null || loginUser.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Email and password must be provided");
+                .body(Collections.singletonMap("message", "E-Mail und Passwort müssen angegeben werden"));
         }
-    
-        // Search for the user by email
+
         User user = users.values().stream()
             .filter(u -> u.getEmail().equals(loginUser.getEmail()))
             .findFirst()
             .orElse(null);
-    
-        // User does not exist
-        if (user == null) {
+
+            // Einheitliche Fehlermeldung für falsche E-Mail oder falsches Passwort
+        if (user == null || !user.getPassword().equals(loginUser.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("User with this email was not found");
+                .body(Collections.singletonMap("message", "E-Mail oder Passwort ist falsch"));
         }
-    
-        // Password verification
-        if (!user.getPassword().equals(loginUser.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("The entered password is incorrect");
-        }
-    
-        // Successful authentication - generate a dummy token
+
         String token = UUID.randomUUID().toString();
         return ResponseEntity.ok(EntityModel.of(user,
             linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel())
             .add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")));
     }
 
-    /**
-     * Registration method
-     * Adds a new user if the email is not already registered.
-     */
+
+    
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (user.getEmail() == null || user.getName() == null || user.getPassword() == null) {
@@ -74,8 +63,10 @@ class UserController {
             .anyMatch(u -> u.getEmail().equals(user.getEmail()));
     
         if (emailExists) {
-            return ResponseEntity.badRequest().body("Email already registered");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Collections.singletonMap("message", "E-Mail-Account existiert bereits"));
         }
+
     
         // Generate and store user ID
         user.setId(UUID.randomUUID().toString());

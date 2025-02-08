@@ -305,17 +305,26 @@ class UserService {
                 body: JSON.stringify({ email, password }), // Passwort wird hier gesendet
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error('Login fehlgeschlagen');
+                // Überprüfe die Fehlermeldung vom Backend
+                if (data.message === 'Invalid password') {
+                    throw new Error('Passwort ist falsch');
+                } else if (data.message === 'User not found') {
+                    throw new Error('E-Mail oder Passwort ist falsch');
+                } else if (response.status === 401) {
+                    throw new Error('E-Mail oder Passwort ist falsch');
+                } else {
+                    // Generischer Fehler für andere Fälle
+                    throw new Error(data.message || 'Login fehlgeschlagen');
+                }
             }
 
-            const user = await response.json();
-
             // Rückgabe der Benutzerdaten
-            return user;
+            return data;
         } catch (error) {
-            console.error('Login-Fehler:', error);
-            throw error;
+            throw new Error(error.message || 'Login fehlgeschlagen');
         }
     }
 
@@ -332,21 +341,18 @@ class UserService {
             const data = await response.json();
 
             if (!response.ok) {
-                // Versuch, die Antwort als JSON zu parsen
-                let errorData;
-                try {
-                    errorData = await response.json();
-                } catch (jsonError) {
-                    // Falls das fehlschlägt, den Text extrahieren
-                    errorData = { message: await response.text() };
+                // Spezifische Fehlermeldung bei 409 Conflict
+                if (response.status === 409) {
+                    throw new Error('E-Mail-Account existiert bereits.');
+                    
+                } else {
+                    throw new Error(data.message || 'Registrierung fehlgeschlagen');
                 }
-                throw new Error(errorData.message || 'Registrierung fehlgeschlagen');
             }
         
             return data;
         } catch (error) {
-            console.error('Registrierungsfehler:', error);
-            handleError(error);
+            throw new Error(error.message || 'Registrierung fehlgeschlagen');
         }
     }
         

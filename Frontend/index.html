@@ -55,7 +55,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <div id="toast-container" class="toast-container"></div>
                     <!-- Register Form -->
                     <div class="card shadow-sm d-none" id="register-box">
                         <div class="card-body p-4">
@@ -225,6 +225,12 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
                             <button type="button" id="delete-event" class="btn btn-danger d-none">Löschen</button>
                             <button type="submit" form="event-form" class="btn btn-primary">Speichern</button>
+                        </div>
+                        <!-- Lösung für Aufgabe 2: Löschbutton hinzugefügt -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger me-auto" id="delete-event" style="display: none;">Löschen</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                            <button type="submit" class="btn btn-primary">Speichern</button>
                         </div>
                     </div>
                 </div>

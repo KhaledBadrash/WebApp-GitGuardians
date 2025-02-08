@@ -33,35 +33,37 @@ document.getElementById('show-login')?.addEventListener('click', (e) => {
 
 // Login-Formular
 document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        currentUser = await api.users.login(email, password);
-        document.getElementById('login-form').reset();
-        showMainApp();
-        showToast('Erfolgreich eingeloggt', 'success');
-    } catch (error) {
-        showToast('Login fehlgeschlagen: ' + error.message, 'error');
-    }
+  e.preventDefault();
+  try {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      currentUser = await api.users.login(email, password);
+      document.getElementById('login-form').reset();
+      showMainApp();
+      showToast('Erfolgreich eingeloggt', 'success');
+  } catch (error) {
+      showToast(error.message, 'error');
+      console.error('Fehler beim Einloggen:', error);
+  }
 });
 
 // Registrierungs-Formular
 document.getElementById('register-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-        const userData = {
-            name: document.getElementById('register-name').value,
-            email: document.getElementById('register-email').value,
-            password: document.getElementById('register-password').value
-        };
-        currentUser = await api.users.register(userData);
-        document.getElementById('register-form').reset();
-        showMainApp();
-        showToast('Registrierung erfolgreich', 'success');
-    } catch (error) {
-        showToast('Registrierung fehlgeschlagen: ' + error.message, 'error');
-    }
+  e.preventDefault();
+  try {
+      const userData = {
+          name: document.getElementById('register-name').value,
+          email: document.getElementById('register-email').value,
+          password: document.getElementById('register-password').value
+      };
+      currentUser = await api.users.register(userData);
+      document.getElementById('register-form').reset();
+      showMainApp();
+      showToast('Registrierung erfolgreich', 'success');
+  } catch (error) {
+      showToast(error.message, 'error');  // Korrigierte Zeile
+      console.error('Fehler bei der Registrierung:', error);
+  }
 });
 
 // Logout-Button
@@ -308,6 +310,12 @@ function renderDayView(container) {
 
 // Hilfsfunktionen
 
+function formatDateTimeLocal(date) {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+}
+
 function formatWeekDay(date) {
   return date.toLocaleString('de-DE', { weekday: 'short' });
 }
@@ -395,30 +403,26 @@ window.handleDateClick = (date) => {
 
 window.handleEventClick = async (eventId) => {
   try {
-      const event = events.find(e => e.id === eventId);
-      if (!event) return;
+      const response = await api.events.getEventById(eventId);
+      const event = response.event;
       
-      if (event.userId !== currentUser.id) {
-          showToast('Sie können nur Ihre eigenen Events bearbeiten.', 'error');
-          return;
-      }
 
-      // Konvertierung von UTC zu Local Time
       const startDate = new Date(event.start);
       const endDate = new Date(event.end);
       
       document.getElementById('event-id').value = event.id;
       document.getElementById('event-title').value = event.title;
-      document.getElementById('event-start').value = formatDateTime(startDate);
-      document.getElementById('event-end').value = formatDateTime(endDate);
-      document.getElementById('event-priority').value = event.priority;
+      document.getElementById('event-start').value = formatDateTimeLocal(startDate);
+      document.getElementById('event-end').value = formatDateTimeLocal(endDate);
+      
+      // Lösung für Aufgabe 2: Löschbutton sichtbar machen
       document.getElementById('delete-event').classList.remove('d-none');
       eventModal.show();
-  } catch (error) {
-      console.error('Fehler beim Laden des Events:', error);
-      showToast('Fehler beim Laden des Events', 'error');
-  }
-};
+    } catch (error) {
+      console.error('Fehler:', error);
+      showToast('Event konnte nicht geladen werden', 'error');
+    }
+  };
 
 // Kalender Navigation Event Listeners
 document.getElementById('prevMonth')?.addEventListener('click', () => {
@@ -490,17 +494,16 @@ document.getElementById('event-form')?.addEventListener('submit', async (e) => {
 });
 
 // Event Deletion Handler
-document.getElementById('delete-event')?.addEventListener('click', async () => {
-    const eventId = document.getElementById('event-id').value;
-    if (!eventId) return;
-    try {
-        await api.events.deleteEvent(eventId);
-        await loadEvents();
-        eventModal.hide();
-        showToast('Event gelöscht', 'success');
-    } catch (error) {
-        showToast('Fehler beim Löschen des Events: ' + error.message, 'error');
-    }
+document.getElementById('delete-event').addEventListener('click', async () => {
+  const eventId = document.getElementById('event-id').value;
+  try {
+    await api.events.deleteEvent(eventId);
+    await loadEvents();
+    eventModal.hide();
+    showToast('Event gelöscht', 'success');
+  } catch (error) {
+    showToast('Löschen fehlgeschlagen: ' + error.message, 'error');
+  }
 });
 
 // ============================
@@ -530,6 +533,8 @@ function formatDateTime(date) {
 
 
 function showToast(message, type = 'info') {
+  const toastContainer = document.getElementById('toast-container'); // Container muss im HTML existieren
+  
   const toast = document.createElement('div');
   toast.className = `toast align-items-center text-bg-${type} border-0 mb-2`;
   toast.setAttribute('role', 'alert');
@@ -538,12 +543,17 @@ function showToast(message, type = 'info') {
   toast.innerHTML = `
       <div class="d-flex">
           <div class="toast-body">${message}</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Schließen"></button>
+          <button type="button" 
+                  class="btn-close btn-close-white me-2 m-auto" 
+                  data-bs-dismiss="toast" 
+                  aria-label="Schließen"></button>
       </div>
   `;
+  
   toastContainer.appendChild(toast);
   const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
   bsToast.show();
+  
   toast.addEventListener('hidden.bs.toast', () => toast.remove());
 }
 
