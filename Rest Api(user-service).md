@@ -36,9 +36,67 @@ private final Map<String, User> users = new ConcurrentHashMap<>();
 | **deleteUser** | Entfernt einen Benutzer anhand der ID. |
 
 
-### Datenspeicherung
+### Fehlerbehandlung und Exceptions
 
-// A thread-safe map for storing user data
-private final Map<String, User> users = new ConcurrentHashMap<>();
+Diese Exception wird geworfen, wenn ein Benutzer anhand einer ID nicht gefunden wird.
+```
+/**
+ * User not found exception
+ * Thrown when a user with a specific ID does not exist.
+ */
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String id) {
+        super("Could not find user " + id);
+    }
+}
 
+```
+**Wo wird die Exception verwendet?**
+In der getUser-Methode, wenn der Benutzer nicht in der users-Map existiert:
+```
+GetMapping("/{id}")
+public EntityModel<User> getUser(@PathVariable String id) {
+    User user = users.get(id);
+    if (user == null) {
+        throw new UserNotFoundException(id);
+    }
+    return EntityModel.of(user,
+        linkTo(methodOn(UserController.class).getUser(id)).withSelfRel(),
+        linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users")
+    );
+}
+```
+In der updateUser-Methode, wenn der Benutzer nicht existiert:
+
+```
+@PutMapping("/{id}")
+public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User newUser) {
+    User user = users.get(id);
+    if (user == null) {
+        throw new UserNotFoundException(id);
+    }
+    newUser.setId(id);
+    users.put(id, newUser);
+    return ResponseEntity.ok(EntityModel.of(newUser));
+}
+```
+In der deleteUser-Methode, wenn der Benutzer nicht gefunden wurde:
+```
+@DeleteMapping("/{id}")
+public ResponseEntity<?> deleteUser(@PathVariable String id) {
+    if (!users.containsKey(id)) {
+        throw new UserNotFoundException(id);
+    }
+    users.remove(id);
+    return ResponseEntity.noContent().build();
+}
+```
+### Zusammenfassung
+
+Der User-Service ist eine RESTful-Webanwendung, die die Verwaltung von Benutzerdaten und die Authentifizierung innerhalb eines Systems übernimmt. Benutzer können sich registrieren, anmelden, ihre Daten abrufen, aktualisieren und löschen. Dabei stellt die API sicher, dass nur autorisierte Benutzer Zugriff auf ihre eigenen Daten haben.
+
+Die API folgt den REST-Prinzipien und nutzt HTTP-Methoden für CRUD-Operationen. Zur Speicherung der Benutzerdaten wird aktuell eine thread-sichere ConcurrentHashMap verwendet. Eine Erweiterung zur Verwendung einer persistenten Datenbank ist jedoch möglich.
+
+Die Fehlerbehandlung umfasst die benutzerdefinierte Ausnahme UserNotFoundException, die ausgelöst wird, wenn ein Benutzer mit einer bestimmten ID nicht existiert. Dies stellt sicher, dass nur gültige und existierende Benutzer abgefragt oder geändert werden können.
 
