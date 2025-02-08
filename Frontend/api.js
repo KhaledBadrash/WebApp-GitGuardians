@@ -1,7 +1,7 @@
 // api.js
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Zentrale Fehlerbehandlung
+// Central error handling
 const handleError = (error) => {
     console.error('API Error:', error);
     
@@ -45,9 +45,9 @@ const defaultHeaders = {
     'X-Requested-With': 'XMLHttpRequest'
 };
 
-// Event-Service für GraphQL-Operationen
+// Event service for GraphQL operations
 class EventService {
-    // Events innerhalb eines bestimmten Datumsbereichs abrufen
+   // Retrieve events within a specific date range
     static async getEvents(start, end) {
         const query = `
             query EventsByDateRange($start: DateTime!, $end: DateTime!) {
@@ -65,7 +65,7 @@ class EventService {
         return this.sendGraphQLQuery(query, { start, end });
     }
 
-            // Neues Event erstellen
+            // Create new event
             static async createEvent({ title, start, end, userId, priority, categoryId }) {
                 const mutation = `
                     mutation CreateEvent(
@@ -97,7 +97,7 @@ class EventService {
                 return this.sendGraphQLQuery(mutation, { title, start, end, userId, priority, categoryId });
             }
 
-    // Event aktualisieren
+   // Update event
     static async updateEvent(eventId, updates) {
         const mutation = `
             mutation UpdateEvent($id: ID!, $title: String, $start: DateTime, $end: DateTime, $priority: Priority, $categoryId: String) {
@@ -115,7 +115,7 @@ class EventService {
         return this.sendGraphQLQuery(mutation, { id: eventId, ...updates });
     }
 
-    // Event löschen
+// Delete event
     static async deleteEvent(eventId) {
         const mutation = `
             mutation DeleteEvent($id: ID!) {
@@ -125,7 +125,7 @@ class EventService {
         return this.sendGraphQLQuery(mutation, { id: eventId });
     }
 
-    // Einzelnes Event anhand der ID abrufen
+// Retrieve individual event by ID
     static async getEventById(eventId) {
         const query = `
             query GetEvent($id: ID!) {
@@ -143,7 +143,7 @@ class EventService {
         return this.sendGraphQLQuery(query, { id: eventId });
     }
 
-    // GraphQL-Abfragen und Mutationen senden
+    // Send GraphQL queries and mutations
     static async sendGraphQLQuery(query, variables) {
         try {
             const response = await fetch(`http://localhost:8080/graphql`, {                
@@ -170,7 +170,7 @@ class EventService {
 // REST Todo Service
 // REST Todo Service
 class TodoService {
-    // Alle Todos eines Benutzers abrufen
+// Get all todos of a user
     static async getTodos(userId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos?userId=${userId}`);
@@ -178,8 +178,7 @@ class TodoService {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            
-            // Prüfe ob die Antwort ein Array ist oder die erwartete Struktur hat
+            // Check if the response is an array or has the expected structur
             if (Array.isArray(data)) {
                 return data.map(todo => ({
                     ...todo,
@@ -191,16 +190,16 @@ class TodoService {
                     links: todo._links || {},
                 }));
             } else {
-                // Fallback wenn keine Todos gefunden wurden
+                // Fallback if no todos were found
                 return [];
             }
         } catch (error) {
             console.error('Fehler beim Laden der Todos:', error);
-            return []; // Leeres Array zurückgeben statt Error zu werfen
+            return [];// Return empty array instead of throwing error
         }
     }
 
-    // Neues Todo erstellen
+    // Create new todo
     static async createTodo({ title, description, userId }) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos`, {
@@ -227,7 +226,7 @@ class TodoService {
         }
     }
 
-    // Todo-Status umschalten
+  // Toggle todo status
     static async toggleTodo(todoId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos/${todoId}/toggle`, {
@@ -249,7 +248,7 @@ class TodoService {
         }
     }
 
-    // Todo löschen
+    // Todo delete
     static async deleteTodo(todoId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos/${todoId}`, {
@@ -271,7 +270,7 @@ class TodoService {
         }
     }
 
-    // Todo nach ID abrufen
+    // Get Todo by ID
     static async getTodoById(todoId) {
         try {
             const response = await fetch(`${API_BASE_URL}/todos/${todoId}`);
@@ -296,13 +295,13 @@ class TodoService {
 }
 // REST User Service --> should be done
 class UserService {
-    // Login-Methode
+    // login method
     static async login(email, password) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }), // Passwort wird hier gesendet
+                body: JSON.stringify({ email, password }), //Password will be sent here
             });
 
             if (!response.ok) {
@@ -311,7 +310,7 @@ class UserService {
 
             const user = await response.json();
 
-            // Rückgabe der Benutzerdaten
+           // Return the user data
             return user;
         } catch (error) {
             console.error('Login-Fehler:', error);
@@ -319,8 +318,7 @@ class UserService {
         }
     }
 
-    // Registrierungsmethode
-        // Registrierungsmethode
+   // registration method
     static async register(user) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/register`, {
@@ -332,12 +330,12 @@ class UserService {
             const data = await response.json();
 
             if (!response.ok) {
-                // Versuch, die Antwort als JSON zu parsen
+               // Try to parse the response as JSON
                 let errorData;
                 try {
                     errorData = await response.json();
                 } catch (jsonError) {
-                    // Falls das fehlschlägt, den Text extrahieren
+                    // If that fails, extract the text
                     errorData = { message: await response.text() };
                 }
                 throw new Error(errorData.message || 'Registrierung fehlgeschlagen');
@@ -350,7 +348,7 @@ class UserService {
         }
     }
         
-    // Benutzerinformationen abrufen
+ // Get user information
     static async getUser(userId) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/${userId}`);
@@ -366,7 +364,7 @@ class UserService {
         }
     }
 
-    // Alle Benutzer abrufen
+  // Get all users
     static async getAllUsers() {
         try {
             const response = await fetch(`${API_BASE_URL}/users`);
@@ -381,8 +379,7 @@ class UserService {
             throw error;
         }
     }
-
-    // Benutzer aktualisieren
+// Update user
     static async updateUser(userId, userData) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -404,7 +401,7 @@ class UserService {
         }
     }
 
-    // Löschen eines Benutzers
+// Deleting a user
     static async deleteUser(userId) {
         try {
             const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -415,7 +412,7 @@ class UserService {
                 throw new Error('Fehler beim Löschen des Benutzers');
             }
 
-            return true; // Erfolgreiches Löschen
+            return true; // Successful deletion
         } catch (error) {
             console.error('Fehler beim Löschen:', error);
             throw error;
@@ -423,14 +420,13 @@ class UserService {
     }
 }
 
-
-// Category Service (Platzhalter für zukünftige Implementierung)
+// Category Service (placeholder for future implementation)
 class CategoryService {
 //TBD
 
 }
 
-// Zentraler API-Export
+// Central API export
 export const api = {
     events: EventService,
     todos: TodoService,
