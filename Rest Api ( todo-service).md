@@ -8,14 +8,6 @@ Die Datenhaltung erfolgt temporär in einem In-Memory-Speicher, wodurch die API 
 
 Die API stellt wesentliche CRUD-Funktionalitäten bereit, darunter das Anlegen, Abrufen, Bearbeiten und Löschen von Todos. Zudem bietet sie eine Funktion zur Statusänderung, mit der Aufgaben als erledigt oder offen markiert werden können. Die Einbettung von Navigationslinks erleichtert die Interaktion mit der API und verbessert die Benutzerfreundlichkeit für Clients erheblich.
 
-## Technologie-Stack
-
-Eine kurze Übersicht über die verwendeten Technologien:
-
-- **Programmiersprache**: Java  
-- **Framework**: Spring Boot  
-- **Datenhaltung**: In-Memory (ConcurrentHashMap)  
-- **Datenformat**: JSON  
 
 
 ## Funktionsweise der Rest API
