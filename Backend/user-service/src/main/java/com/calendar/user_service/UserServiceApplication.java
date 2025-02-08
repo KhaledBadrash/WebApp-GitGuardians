@@ -4,16 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Hauptklasse der Benutzer-Service-Anwendung.
- * Diese Klasse startet die Spring Boot Anwendung.
- */
+* Main class of user service application.
+* This class starts the Spring Boot application.
+*/
 @SpringBootApplication
 public class UserServiceApplication {
     
     /**
-     * Einstiegspunkt der Anwendung.
-     * Die Spring Boot Anwendung wird hier initialisiert und gestartet.
-     */
+* Application entry point.
+* The Spring Boot application is initialized and started here.
+*/
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }
