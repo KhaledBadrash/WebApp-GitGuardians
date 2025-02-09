@@ -552,6 +552,7 @@ body {
 }
 
 /* Reminder Styles */
+/* Base style for a reminder*/
 .reminder-item {
     padding: 8px;
     margin-bottom: 8px;
@@ -559,9 +560,9 @@ body {
     border-radius: 8px;
     border-left: 4px solid;
 }
-
+/*Different colors for reminders based on priority*/
 .reminder-item.priority-high {
-    border-left-color: #dc3545;
+    border-left-color: #dc3545; /*Red for high priority*/
 }
 
 .reminder-item.priority-medium {
@@ -569,7 +570,7 @@ body {
 }
 
 .reminder-item.priority-low {
-    border-left-color: #28a745;
+    border-left-color: #28a745; /* Green for low prority*/
 } 
 
 /* To-Do Liste Styles */
