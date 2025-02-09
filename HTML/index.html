@@ -205,33 +205,85 @@
 </div>
 
 
-    <!-- Neue Kategorie Modal -->
-    <div class="modal fade" id="categoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Neue Kategorie</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+   <!-- Neue Kategorie Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neue Kategorie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Name der Kategorie -->
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" id="categoryName" placeholder="Kategorie eingeben" required>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="categoryName" required>
+
+                <!-- Beschreibung -->
+                <div class="mb-3">
+                    <label class="form-label">Beschreibung</label>
+                    <textarea class="form-control" id="categoryDescription" rows="2" placeholder="Kurze Beschreibung"></textarea>
+                </div>
+
+                <!-- Farbe mit Live-Vorschau -->
+                <div class="mb-3">
+                    <label class="form-label">Farbe</label>
+                    <div class="d-flex align-items-center">
+                        <input type="color" class="form-control form-control-color me-2" id="categoryColor" value="#3788d8">
+                        <span id="colorPreview" class="rounded-circle" style="width: 30px; height: 30px; background-color: #3788d8; display: inline-block;"></span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Farbe</label>
-                        <input type="color" class="form-control form-control-color" id="categoryColor" value="#3788d8">
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">Speichern</button>
+
+                <!-- Icon Auswahl -->
+                <div class="mb-3">
+                    <label class="form-label">Symbol</label>
+                    <select class="form-control" id="categoryIcon">
+                        <option value="calendar">📅 Kalender</option>
+                        <option value="star">⭐ Wichtig</option>
+                        <option value="meeting">👥 Meeting</option>
+                        <option value="task">✅ Aufgabe</option>
+                    </select>
                 </div>
+
+                <!-- Kategorietyp (z. B. beruflich oder privat) -->
+                <div class="mb-3">
+                    <label class="form-label">Typ</label>
+                    <select class="form-control" id="categoryType">
+                        <option value="work">💼 Beruflich</option>
+                        <option value="personal">🏡 Privat</option>
+                        <option value="other">📌 Sonstiges</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveCategoryBtn">Speichern</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/calendar.js"></script>
+<script>
+    // Farb-Vorschau aktualisieren
+    document.getElementById('categoryColor').addEventListener('input', function() {
+        document.getElementById('colorPreview').style.backgroundColor = this.value;
+    });
+
+    // Kategorie speichern (Platzhalter für Funktion)
+    document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+        const name = document.getElementById('categoryName').value.trim();
+        if (name === '') {
+            alert('Bitte einen Namen für die Kategorie eingeben.');
+            return;
+        }
+        alert('Kategorie gespeichert: ' + name);
+        // Hier könnte der Code eingefügt werden, um die Daten zu speichern
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/calendar.js"></script>
 </body>
-</html> 
+</html>
