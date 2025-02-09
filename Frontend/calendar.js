@@ -1,7 +1,7 @@
 import { api } from './api.js';
 
 // ============================
-// Globale Variablen & DOM-Elemente
+// Global Variables & DOM Elements
 // ============================
 let currentUser = null;
 let currentDate = new Date();
@@ -17,7 +17,7 @@ const userNameDisplay = document.getElementById('user-name');
 const toastContainer = document.querySelector('.toast-container');
 
 // ============================
-// Authentifizierungs- & UI-Toggle
+// Authentication & UI Toggle
 // ============================
 document.getElementById('show-register')?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ document.getElementById('show-login')?.addEventListener('click', (e) => {
     loginBox.classList.remove('d-none');
 });
 
-// Login-Formular
+// Login-Form
 document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   try {
@@ -47,7 +47,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// Registrierungs-Formular
+// Registration Form 
 document.getElementById('register-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   try {
@@ -74,7 +74,7 @@ document.getElementById('logout-btn')?.addEventListener('click', () => {
 });
 
 // ============================
-// To‑Do-Funktionalitäten
+// To‑Do-Functionalities
 // ============================
 document.getElementById('todo-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -165,7 +165,7 @@ window.deleteTodo = async (todoId) => {
 };
 
 // ============================
-// Kalender-Funktionalitäten
+// Calender-Functionalities
 // ============================
 function renderCalendar() {
     const calendarEl = document.getElementById('calendar');
@@ -244,7 +244,7 @@ function renderWeekView(container) {
 
   let html = '<table class="w-100"><thead><tr><th style="width: 60px">Zeit</th>';
   
-  // Kopfzeile mit Wochentagen
+  // Header with Weekdays 
   for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
       day.setDate(startOfWeek.getDate() + i);
@@ -253,7 +253,7 @@ function renderWeekView(container) {
   }
   html += '</tr></thead><tbody>';
 
-  // Zeitslots
+  // Timeslots
   for (let hour = 0; hour < 24; hour++) {
       html += '<tr>';
       html += `<td class="text-center">${String(hour).padStart(2, '0')}:00</td>`;
@@ -286,7 +286,7 @@ function renderDayView(container) {
   html += `<th class="text-center">${formatWeekDay(day)} ${day.getDate()}</th>`;
   html += '</tr></thead><tbody>';
 
-  // Zeitslots
+  // Timeslots
   for (let hour = 0; hour < 24; hour++) {
       const date = new Date(day);
       date.setHours(hour, 0, 0, 0);
@@ -308,7 +308,7 @@ function renderDayView(container) {
   container.innerHTML = html;
 }
 
-// Hilfsfunktionen
+// Helper Functions
 
 function formatDateTimeLocal(date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -355,7 +355,7 @@ async function loadEvents() {
       const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
       const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
       
-      // Konvertierung in UTC
+      // Converting in UTC
       const utcStart = Date.UTC(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
       const utcEnd = Date.UTC(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate() + 1);
 
@@ -372,9 +372,9 @@ async function loadEvents() {
   }
 }
 
-// Event Handlers für den Kalender
+// Event Handlers for the Calendar
 window.handleDateClick = (date) => {
-  // Konvertiere das lokale Datum in UTC
+  // Convert Local Date to UTC
   const utcDate = new Date(
     Date.UTC(
       date.getFullYear(),
@@ -385,16 +385,16 @@ window.handleDateClick = (date) => {
     )
   );
 
-  // Endzeit berechnen (1 Stunde später)
+  // Calculate End Time (1 Hour Later)
   const utcEnd = new Date(utcDate);
   utcEnd.setUTCHours(utcDate.getUTCHours() + 1);
 
   // Formatiere die Datumsangaben in ISO-8601 mit Zeitzoneninformation
   document.getElementById('event-id').value = '';
-  document.getElementById('event-title').value = '';
+  documentS.getElementById('event-title').value = '';
   document.getElementById('event-start').value = formatDateTime(utcDate);
   document.getElementById('event-end').value = formatDateTime(utcEnd);
-  document.getElementById('event-priority').value = 'MEDIUM';
+  documentS.getElementById('event-priority').value = 'MEDIUM';
   document.getElementById('delete-event').classList.add('d-none');
   
   // Zeige das Modal an
