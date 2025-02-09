@@ -1,1 +1,4 @@
-Test
+## API Gateway
+### Einführung 
+Das API Gateway ist die zentrale Schnittstelle für die Kommunikation zwischen den Clients und den Microservices der Kalenderanwendung. Es übernimmt die Aufgabe, eingehende Anfragen an die entsprechenden Backend-Services weiterzuleiten und dabei Routing, Sicherheitsprüfungen und gegebenenfalls Datenanpassungen vorzunehmen. Nutzer können über das API Gateway gezielt auf verschiedene Dienste wie den Event-, User- oder Todo-Service zugreifen, ohne sich um die direkte Kommunikation mit den einzelnen Microservices kümmern zu müssen.
+Ein wesentlicher Vorteil des API Gateways ist die effiziente Verwaltung von Anfragen, indem es nur die relevanten Daten an die jeweiligen Services weiterleitet und unnötigen Overhead vermeidet. Zusätzlich integriert das Gateway wichtige Sicherheitsmechanismen wie CORS-Handling, um kontrollierten Zugriff von verschiedenen Frontend-Anwendungen zu ermöglichen. Durch die flexible Architektur können zudem neue Microservices nahtlos angebunden werden, was eine skalierbare und erweiterbare Infrastruktur gewährleistet.
