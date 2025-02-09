@@ -699,7 +699,7 @@ body {
     z-index: 100;
 }
 
-/* Arbeitszeitslots hervorheben (9-17 Uhr) */
+/* Highlight working hours slots (9 AM - 5 PM) */
 .time-slot[data-hour="9"],
 .time-slot[data-hour="10"],
 .time-slot[data-hour="11"],
@@ -711,7 +711,7 @@ body {
     background-color: rgba(232, 245, 233, 0.5);
 }
 
-/* Aktuelle Zeitlinie */
+/* Current Timeline */
 .current-time-indicator {
     position: absolute;
     left: 0;
@@ -721,7 +721,7 @@ body {
     z-index: 10;
     pointer-events: none;
 }
-
+/* Dot at the start of the current time line */
 .current-time-indicator::before {
     content: '';
     position: absolute;
@@ -733,7 +733,9 @@ body {
     border-radius: 50%;
 }
 
-/* Mini-Kalender Styles */
+/* Mini-Calender Styles */
+
+/* Main container for the mini calendar */
 .mini-calendar {
     margin: 20px 0;
     padding: 10px;
@@ -741,34 +743,34 @@ body {
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-
+/* Header section (e.g., month name and navigation buttons) */
 .mini-calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
 }
-
+/* Grid layout for calendar days (7 columns for each weekday) */
 .mini-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
 }
-
+/* Styling for individual day cells */
 .mini-calendar-cell {
-    aspect-ratio: 1;
+    aspect-ratio: 1; /* Ensures square shape */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    cursor: pointer;
+    cursor: pointer; /* Indicates interactivity */
     border-radius: 4px;
 }
-
+/* Hover effect for calendar days */
 .mini-calendar-cell:hover {
     background-color: #f5f5f5;
 }
-
+/* Highlights the current day */
 .mini-calendar-cell.today {
     background-color: #e3f2fd;
     font-weight: bold;
