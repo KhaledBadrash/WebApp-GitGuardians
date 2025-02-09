@@ -499,9 +499,7 @@ body {
 
 .priority-option.low.selected {
     background-color: #28a745;
-} 
-
-/* Improved timelines */
+/* Verbesserte Zeitlinien */
 .time-indicator {
     position: absolute;
     left: 0;
@@ -522,18 +520,17 @@ body {
     border-radius: 50%;
 } 
 
-/* Monthly view styles */
+/* Monatsansicht Styles */
 .month-cell {
     min-height: 100px;
     border: 1px solid var(--border-color);
     padding: 5px;
 }
 
-/* Highlights empty cells in the monthly calendar */
 .month-cell.empty {
     background-color: var(--background-hover);
 }
-/* Styling for the date header in the calendar */
+
 .date-header {
     font-weight: bold;
     margin-bottom: 5px;
@@ -544,25 +541,43 @@ body {
     flex-wrap: wrap;
     gap: 2px;
 }
-/* Dot representation for events in the monthly calendar */
+
 .event-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
 }
 
+/* Event-Typen Farben */
+.event-dot.meeting {
+    background-color: #007bff;
+}
+
+.event-dot.birthday {
+    background-color: #ff5733;
+}
+
+.event-dot.holiday {
+    background-color: #28a745;
+}
+
 /* Reminder Styles */
-/* Base style for a reminder*/
 .reminder-item {
     padding: 8px;
     margin-bottom: 8px;
     background: white;
     border-radius: 8px;
     border-left: 4px solid;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
-/*Different colors for reminders based on priority*/
+
+.reminder-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
 .reminder-item.priority-high {
-    border-left-color: #dc3545; /*Red for high priority*/
+    border-left-color: #dc3545;
 }
 
 .reminder-item.priority-medium {
@@ -570,11 +585,10 @@ body {
 }
 
 .reminder-item.priority-low {
-    border-left-color: #28a745; /* Green for low prority*/
+    border-left-color: #28a745;
 } 
 
 /* To-Do Liste Styles */
-/* Background style for the to-do section*/
 .todo-section {
     margin: 24px 0;
     padding: 16px;
@@ -587,12 +601,22 @@ body {
     gap: 8px;
     margin-bottom: 12px;
 }
-/* Limits the height of the to-do list and enables vertical scrolling */
+
 .todo-list {
     max-height: 200px;
     overflow-y: auto;
 }
-/* Styling for individual to-do items */
+
+/* Scrollbar-Styling */
+.todo-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 6px;
+}
+
 .todo-item {
     display: flex;
     align-items: center;
@@ -601,8 +625,14 @@ body {
     background: white;
     border-radius: 4px;
     margin-bottom: 4px;
+    transition: background-color 0.3s ease-in-out;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
-/* Reduces visibility and adds a strikethrough effect when a task is marked as completed */
+
+.todo-item:hover {
+    background-color: var(--background-hover);
+}
+
 .todo-item.completed {
     opacity: 0.7;
     text-decoration: line-through;
@@ -613,6 +643,33 @@ body {
     height: 16px;
 }
 
+.todo-delete {
+    margin-left: auto;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+/* Dark Mode Unterstützung */
+@media (prefers-color-scheme: dark) {
+    .reminder-item {
+        background: #333;
+        color: white;
+    }
+    
+    .todo-item {
+        background: #444;
+        color: white;
+    }
+
+    .todo-delete {
+        color: #bbb;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
 .todo-delete {
     margin-left: auto;
     color: var(--text-secondary);
