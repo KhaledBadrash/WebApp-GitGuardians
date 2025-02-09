@@ -95,8 +95,179 @@ body {
     background: white;
     border-radius: 4px;
     cursor: pointer;
+/* Verbesserte Zeitlinien */
+.time-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--primary-blue);
+    z-index: 3;
 }
-/* Arrow navigation buttons*/
+
+.time-indicator::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-blue);
+    border-radius: 50%;
+} 
+
+/* Monatsansicht Styles */
+.month-cell {
+    min-height: 100px;
+    border: 1px solid var(--border-color);
+    padding: 5px;
+}
+
+.month-cell.empty {
+    background-color: var(--background-hover);
+}
+
+.date-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.month-events-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* Event-Typen Farben */
+.event-dot.meeting {
+    background-color: #007bff;
+}
+
+.event-dot.birthday {
+    background-color: #ff5733;
+}
+
+.event-dot.holiday {
+    background-color: #28a745;
+}
+
+/* Reminder Styles */
+.reminder-item {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.reminder-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reminder-item.priority-high {
+    border-left-color: #dc3545;
+}
+
+.reminder-item.priority-medium {
+    border-left-color: #ffc107;
+}
+
+.reminder-item.priority-low {
+    border-left-color: #28a745;
+} 
+
+/* To-Do Liste Styles */
+.todo-section {
+    margin: 24px 0;
+    padding: 16px;
+    background: var(--background-hover);
+    border-radius: 8px;
+}
+
+.todo-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.todo-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Scrollbar-Styling */
+.todo-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 6px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    transition: background-color 0.3s ease-in-out;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item:hover {
+    background-color: var(--background-hover);
+}
+
+.todo-item.completed {
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+.todo-checkbox {
+    width: 16px;
+    height: 16px;
+}
+
+.todo-delete {
+    margin-left: auto;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+/* Dark Mode Unterstützung */
+@media (prefers-color-scheme: dark) {
+    .reminder-item {
+        background: #333;
+        color: white;
+    }
+    
+    .todo-item {
+        background: #444;
+        color: white;
+    }
+
+    .todo-delete {
+        color: #bbb;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Arrow navigation buttons */
 .nav-arrows button {
     width: 32px;
     height: 32px;
@@ -104,6 +275,11 @@ body {
     background: none;
     border-radius: 50%;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-arrows button:hover {
+    background-color: var(--background-hover);
 }
 
 .current-date {
@@ -111,6 +287,7 @@ body {
     font-weight: 400;
     margin: 0 12px;
 }
+
 /* Dropdown selector for different calendar views */
 .view-selector {
     padding: 0 12px;
@@ -118,6 +295,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background: white;
+    cursor: pointer;
 }
 
 /* Main Content */
@@ -126,18 +304,19 @@ body {
     flex: 1;
     overflow: hidden;
 }
+
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
     padding: 12px;
     border-right: 1px solid var(--border-color);
-    height: calc(100vh - 64px); /* Height of the  Viewports minus Header */
-    overflow-y: auto; /* enables Scrolling */
-    scrollbar-width: thin; /* for Firefox */
-    scrollbar-color: var(--border-color) transparent; /* Für Firefox */
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
 }
 
-/* Styling for Webkit Browser (Chrome, Safari, Edge) */
+/* Styling for Webkit Browser */
 .sidebar::-webkit-scrollbar {
     width: 8px;
 }
@@ -150,7 +329,8 @@ body {
     background-color: var(--border-color);
     border-radius: 4px;
 }
-/* Button to create a new event*/
+
+/* Button to create a new event */
 .create-event-btn {
     width: 100%;
     padding: 12px 24px;
@@ -162,10 +342,11 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .create-event-btn:hover {
-    box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3);
+    box-shadow: 0 1px 4px 0 rgba(60,64,67,0.4);
 }
 
 /* Calendar Grid layout */
