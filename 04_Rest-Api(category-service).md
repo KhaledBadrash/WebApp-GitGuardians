@@ -38,10 +38,20 @@ CategoryController: Verwaltet die REST-Endpunkte für Kategorien und verarbeitet
                 linkTo(methodOn(CategoryController.class).getAllCategories(category.getUserId()))
                         .withRel("user-categories")));
     }
-    ```                                                                                           
+```                                          
  **2. Erweiterte Datentypen**  
 
-Der **Category Service** verarbeitet Datums- und Zeitwerte mit **LocalDateTime** aus Java 17. Dank der integrierten Unterstützung von **Spring Boot und Jackson** wird LocalDateTime automatisch ins **ISO 8601-Format** (yyyy-MM-dd'T'HH:mm:ss) umgewandelt. Dadurch bleiben Zeitangaben in API-Anfragen und -Antworten einheitlich und werden korrekt zwischen Client und Server übertragen.  
+Der Category Service verarbeitet Datums- und Zeitwerte mit LocalDateTime aus Java 17. Dank der integrierten Unterstützung von Spring Boot und Jackson wird LocalDateTime automatisch ins ISO 8601-Format (yyyy-MM-dd'T'HH:mm:ss) umgewandelt. Dadurch bleiben Zeitangaben in API-Anfragen und -Antworten einheitlich und werden korrekt zwischen Client und Server übertragen.  
 
-#### **Bezug zu unserem Code:**  
-Das Feld createdAt im **Category**-Modell ist als LocalDateTime definiert. Da Spring Boot diesen Typ nativ unterstützt, erfolgt die Konvertierung automatisch, sodass keine zusätzliche Verarbeitung erforderlich ist.  
+Bezug zu unserem Code:  
+Das Feld createdAt im Category-Modell ist als LocalDateTime definiert. Da Spring Boot diesen Typ nativ unterstützt, erfolgt die Konvertierung automatisch, sodass keine zusätzliche Verarbeitung erforderlich ist. 
+
+ **3. Reduzierung von Wiederholendem Code durch Lombok**  
+
+Im **Category Service** setzen wir Lombok ein, um redundanten Boilerplate-Code zu vermeiden und die Wartbarkeit zu verbessern.  
+
+Durch @Getter, @Setter, @NoArgsConstructor und @AllArgsConstructor werden Getter, Setter und Konstruktoren automatisch generiert, wodurch der Code schlanker und lesbarer bleibt.  
+
+Zusätzlich sorgt RequiredArgsConstructor dafür, dass Abhängigkeiten sauber injiziert werden, ohne dass explizite Konstruktoren geschrieben werden müssen. Das führt zu einer kompakteren und wartungsfreundlicheren Codebasis.
+
+  

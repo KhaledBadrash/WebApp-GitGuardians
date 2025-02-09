@@ -529,10 +529,11 @@ body {
     padding: 5px;
 }
 
+/* Highlights empty cells in the monthly calendar */
 .month-cell.empty {
     background-color: var(--background-hover);
 }
-
+/* Styling for the date header in the calendar */
 .date-header {
     font-weight: bold;
     margin-bottom: 5px;
@@ -543,7 +544,7 @@ body {
     flex-wrap: wrap;
     gap: 2px;
 }
-
+/* Dot representation for events in the monthly calendar */
 .event-dot {
     width: 6px;
     height: 6px;
