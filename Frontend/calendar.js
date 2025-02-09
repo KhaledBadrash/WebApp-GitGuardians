@@ -389,7 +389,7 @@ window.handleDateClick = (date) => {
   const utcEnd = new Date(utcDate);
   utcEnd.setUTCHours(utcDate.getUTCHours() + 1);
 
-  // Formatiere die Datumsangaben in ISO-8601 mit Zeitzoneninformation
+  // Format Date to ISO-8601 with Timezone Information
   document.getElementById('event-id').value = '';
   documentS.getElementById('event-title').value = '';
   document.getElementById('event-start').value = formatDateTime(utcDate);
@@ -397,7 +397,7 @@ window.handleDateClick = (date) => {
   documentS.getElementById('event-priority').value = 'MEDIUM';
   document.getElementById('delete-event').classList.add('d-none');
   
-  // Zeige das Modal an
+  // Show the Modal
   eventModal.show();
 };
 
@@ -415,7 +415,7 @@ window.handleEventClick = async (eventId) => {
       document.getElementById('event-start').value = formatDateTimeLocal(startDate);
       document.getElementById('event-end').value = formatDateTimeLocal(endDate);
       
-      // Lösung für Aufgabe 2: Löschbutton sichtbar machen
+      // Solution for Task 2: Make Delete Button Visible
       document.getElementById('delete-event').classList.remove('d-none');
       eventModal.show();
     } catch (error) {
@@ -424,7 +424,7 @@ window.handleEventClick = async (eventId) => {
     }
   };
 
-// Kalender Navigation Event Listeners
+// Calendar Navigation Event Listeners 
 document.getElementById('prevMonth')?.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     loadEvents();
@@ -454,7 +454,7 @@ document.getElementById('today')?.addEventListener('click', () => {
 document.getElementById('event-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  // Konvertiere die Eingabedaten in UTC
+  // Convert Input Data to UTC
   const start = new Date(document.getElementById('event-start').value);
   const end = new Date(document.getElementById('event-end').value);
   
@@ -507,7 +507,7 @@ document.getElementById('delete-event').addEventListener('click', async () => {
 });
 
 // ============================
-// App Management Funktionen
+// App Management Functions
 // ============================
 function showMainApp() {
   console.log('Showing main app...');
@@ -558,7 +558,7 @@ function showToast(message, type = 'info') {
 }
 
 // ============================
-// Initialisierung
+// Initialization 
 // ============================
 document.addEventListener('DOMContentLoaded', () => {
   const modalEl = document.getElementById('event-modal');
