@@ -129,42 +129,81 @@
         </div>
     </div>
 
-    <!-- Event Creation Modal -->
-    <div class="modal fade" id="eventModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Neuer Termin</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+   <!-- Event Creation Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neuer Termin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Titel -->
+                <div class="mb-3">
+                    <input type="text" class="form-control event-title-input" placeholder="Titel hinzufügen" required>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <input type="text" class="form-control event-title-input" placeholder="Titel hinzufügen" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Start</label>
-                        <input type="datetime-local" class="form-control" id="eventStart" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Ende</label>
-                        <input type="datetime-local" class="form-control" id="eventEnd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Priorität</label>
-                        <select name="priority" class="form-control">
-                            <option value="high">Wichtig</option>
-                            <option value="medium" selected>Standard</option>
-                            <option value="low">Optional</option>
-                        </select>
-                    </div>
+                
+                <!-- Startzeit -->
+                <div class="mb-3">
+                    <label class="form-label">Start</label>
+                    <input type="datetime-local" class="form-control" id="eventStart" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                    <button type="button" class="btn btn-primary save-event">Speichern</button>
+                
+                <!-- Endzeit -->
+                <div class="mb-3">
+                    <label class="form-label">Ende</label>
+                    <input type="datetime-local" class="form-control" id="eventEnd" required>
                 </div>
+
+                <!-- Beschreibung -->
+                <div class="mb-3">
+                    <label class="form-label">Beschreibung</label>
+                    <textarea class="form-control" rows="3" placeholder="Details hinzufügen"></textarea>
+                </div>
+
+                <!-- Priorität -->
+                <div class="mb-3">
+                    <label class="form-label">Priorität</label>
+                    <select name="priority" class="form-control">
+                        <option value="high">Wichtig</option>
+                        <option value="medium" selected>Standard</option>
+                        <option value="low">Optional</option>
+                    </select>
+                </div>
+
+                <!-- Erinnerung setzen -->
+                <div class="mb-3">
+                    <label class="form-label">Erinnerung</label>
+                    <select class="form-control">
+                        <option value="none" selected>Keine</option>
+                        <option value="5">5 Minuten vorher</option>
+                        <option value="15">15 Minuten vorher</option>
+                        <option value="30">30 Minuten vorher</option>
+                        <option value="60">1 Stunde vorher</option>
+                    </select>
+                </div>
+
+                <!-- Farbauswahl -->
+                <div class="mb-3">
+                    <label class="form-label">Farbe</label>
+                    <input type="color" class="form-control form-control-color" value="#ff0000">
+                </div>
+
+                <!-- Teilnehmer hinzufügen -->
+                <div class="mb-3">
+                    <label class="form-label">Teilnehmer (E-Mail)</label>
+                    <input type="email" class="form-control" placeholder="E-Mail-Adresse hinzufügen">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary save-event">Speichern</button>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Neue Kategorie Modal -->
     <div class="modal fade" id="categoryModal" tabindex="-1">
