@@ -273,61 +273,61 @@ hr {
         font-size: 0.7em;
     }
 }
-/* Zusätzliche Styles für Wochen- und Tagesansicht */
+/* Additional styles for week and day view */
 .custom-calendar table {
-    table-layout: fixed;
+    table-layout: fixed; 
 }
 
 .custom-calendar td {
-    position: relative;
+    position: relative; 
     padding: 0;
     vertical-align: top;
 }
 
 .custom-calendar th {
     padding: 10px;
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; 
     border: 1px solid #dee2e6;
 }
 
 .events-container {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden; 
 }
 
-/* Anpassungen für die Zeitanzeige */
+/* Adjustments for time display */
 .custom-calendar td:first-child {
-    width: 60px;
+    width: 60px; 
     text-align: center;
     font-size: 0.9em;
     color: #666;
     background-color: #f8f9fa;
 }
 
-/* Event Styles anpassen */
+/* Styling for event elements */
 .event {
     margin: 1px;
     padding: 2px 4px;
     font-size: 0.8em !important;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; 
 }
 
-/* Responsive Anpassungen */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
     .custom-calendar td:first-child {
-        width: 40px;
+        width: 40px; 
         font-size: 0.8em;
     }
     
     .event {
-        font-size: 0.7em !important;
+        font-size: 0.7em !important; 
     }
     
     .calendar-header {
-        flex-wrap: wrap;
+        flex-wrap: wrap; 
         gap: 0.5rem;
     }
     
@@ -335,14 +335,15 @@ hr {
         font-size: 1.2rem;
     }
 
+    /* Toast notification styling */
     .toast-container {
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 9999;
-      }
+        z-index: 9999; 
+    }
       
-      .toast {
+    .toast {
         min-width: 250px;
         padding: 15px;
         margin-bottom: 10px;
@@ -351,21 +352,23 @@ hr {
         display: flex;
         align-items: center;
         animation: slideIn 0.3s ease-out;
-      }
+    }
       
-      .toast.error {
+    /* Color variations for different notification types */
+    .toast.error {
         background-color: #dc3545;
-      }
+    }
       
-      .toast.success {
+    .toast.success {
         background-color: #28a745;
-      }
+    }
       
-      .toast.info {
+    .toast.info {
         background-color: #17a2b8;
-      }
+    }
       
-      @keyframes slideIn {
+    /* Animation effect for notifications */
+    @keyframes slideIn {
         from {
           transform: translateX(100%);
           opacity: 0;
@@ -374,5 +377,5 @@ hr {
           transform: translateX(0);
           opacity: 1;
         }
-      }
+    }
 }
